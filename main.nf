@@ -1,3 +1,5 @@
+nextflow.enable.dsl = 2
+
 //include { PREPARE_GENOME                                       } from '../subworkflows/local/prepare_genome'
 include { CAT_FASTQ } from './modules_simple/cat.nf'
 include { FASTQC } from './modules_simple/fastqc.nf'
