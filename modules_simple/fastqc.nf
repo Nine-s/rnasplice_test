@@ -1,0 +1,20 @@
+
+
+process FASTQC {
+    label 'fastqc'
+    tag "fastqc $sample_id"
+    publishDir params.outdir
+    //container "biocontainers/fastqc:v0.11.9_cv5"
+    container "staphb/fastqc:0.11.9"
+    input:
+    tuple val(sample_id), path(reads), val(condition)
+
+    output:
+    path("*_fastqc.zip", emit: zip)
+
+
+    script:
+    """
+    fastqc ${reads[0]} ${reads[1]} --thread ${params.threads}
+    """
+}
