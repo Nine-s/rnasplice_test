@@ -5,12 +5,12 @@ process STAR_ALIGN {
     container "mgibio/star:2.7.0f"
 
     input:
-    tuple val(sample_name), path(reads)
+    tuple val(sample_name), path(reads), val(condition)
     path(index)
     path(annotation)
 
     output:
-    tuple val(sample_name), path("${sample_name}*.sam"), emit: sam 
+    tuple val(sample_name), path("${sample_name}*.sam"), val(condition), emit: sam 
 
     script:
     """

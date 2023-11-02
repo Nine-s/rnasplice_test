@@ -5,10 +5,10 @@ process TRIMGALORE {
 
     // Input FastQ files for read 1 and read 2
     input:
-        tuple val(sample_id), path(reads), val(condition)
+        tuple val(name), path(reads), val(condition)
     
     output:
-        tuple val(name), path("${name}*val*.f*q"), emit: reads
+        tuple val(name), path("${name}*val*.f*q"), val(condition) emit: reads
     script:
     """
     trim_galore --paired --output_dir . ${reads[0]} ${reads[1]}
