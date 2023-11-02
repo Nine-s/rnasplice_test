@@ -11,6 +11,6 @@ process TRIMGALORE {
         tuple val(name), path("*val*.f*q"), val(condition), emit: reads
     script:
     """
-    trim_galore --paired --output_dir . ${reads[0]} ${reads[1]}
+    trim_galore --paired  ${reads[0]} ${reads[1]}
     """
 }
