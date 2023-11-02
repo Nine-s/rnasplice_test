@@ -2,6 +2,7 @@
 process STAR_ALIGN {
     label 'star'
     publishDir params.outdir
+    container "mgibio/star:2.7.0f"
 
     input:
     tuple val(sample_name), path(reads)
