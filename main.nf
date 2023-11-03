@@ -10,6 +10,7 @@ include { GFFREAD_TX2GENE  } from './modules_simple/gffread_tx2gene.nf'
 include { TXIMPORT         } from './modules_simple/tximport.nf'
 include { UNTAR            } from './modules_simple/untar.nf'
 
+include { SALMON_GENOMEGENERATE } from './modules_simple/salmon_genome_generate.nf'
 include { SALMON_QUANT  } from './modules_simple/salmon.nf'
 include { DEXSEQ_COUNT } from './modules_simple/dexseq_count.nf'
 include { DEXSEQ_EXON } from './modules_simple/dexseq_exon.nf'
@@ -42,7 +43,8 @@ STAR_ALIGN(TRIMGALORE.out.reads, STAR_GENOMEGENERATE.out, params.annotation_gtf 
 
 SAMTOOLS( STAR_ALIGN.out.sam )
 
-SALMON_QUANT(SAMTOOLS.out, params.transcripts_fasta)
+SALMON_GENOMEGENERATE ( params.genome, params.transcripts_fasta )
+SALMON_QUANT(read_pairs_ch, SALMON_GENOMEGENERATE.out.index)
 
 //
 //// STEP 5: Create bigWig coverage files 
@@ -81,57 +83,37 @@ DEXSEQ_EXON (
 
 // https://github.com/nf-core/rnasplice/blob/dev/subworkflows/local/drimseq_dexseq_dtu.nf
 
+//salmon_results = SALMON_QUANT.out.transcripts
+
 
 // salmon_results
-// .map {
-//     meta, prefix ->
-//         tgz = prefix[0].toString().endsWith(".tar.gz") ? true : false
-//         [ meta + [tgz: tgz], prefix ]
-// }
-// .branch{
-//     tar: it[0].tgz == true
-//     dir: it[0].tgz == false
-// }
-// .set{ salmon_results }
+//     .map {
+//         meta, prefix ->
+//             tgz = prefix[0].toString().endsWith(".tar.gz") ? true : false
+//             [ meta + [tgz: tgz], prefix ]
+//     }
+//     .branch{
+//         tar: it[0].tgz == true
+//         dir: it[0].tgz == false
+//     }
+//     .set{ salmon_results }
 // UNTAR ( salmon_results.tar )
 // salmon_results = salmon_results.dir.mix(UNTAR.out.untar)
 
 
-        // TX2GENE_TXIMPORT_STAR_SALMON (
-        //     ch_salmon_results,
-        //     PREPARE_GENOME.out.gtf
+//         // TX2GENE_TXIMPORT_STAR_SALMON (
+//         //     ch_salmon_results,
+//         //     PREPARE_GENOME.out.gtf
 
 GFFREAD_TX2GENE ( params.annotation_gtf )
-TXIMPORT ( SALMON_QUANT.out.collect{it[1]}, GFFREAD_TX2GENE )
-//  DRIMSEQ_DEXSEQ_DTU_STAR_SALMON (
-//                 TXIMPORT.out,
-//                 TX2GENE_TXIMPORT_STAR_SALMON.out.tximport_tx2gene,
-//                 ch_samplesheet,
-//                 ch_contrastsheet,
-//                 params.n_dexseq_plot,
-//                 params.min_samps_gene_expr,
-//                 params.min_samps_feature_expr,
-//                 params.min_samps_feature_prop,
-//                 params.min_feature_expr,
-//                 params.min_feature_prop,
-//                 params.min_gene_expr
-//             )
 
+//TXIMPORT ( SALMON_QUANT.out.transcripts.collect{it[1]}, GFFREAD_TX2GENE.out.tx2gene )
+TXIMPORT ( SALMON_QUANT.out.transcripts, GFFREAD_TX2GENE.out.tx2gene )
 
-                    // path: *.txi*.rds (either txi.s.rds or txi.dtu.rds)
-                //path tximport_tx2gene       // path: tximport.tx2gene.tsv
-                    // path: /path/to/samplesheet.csv
 DRIMSEQ_FILTER( TXIMPORT.out.txi_dtu, TXIMPORT.out.tximport_tx2gene, params.csv_input, params.min_samps_gene_expr, params.min_samps_feature_expr, params.min_samps_feature_prop, params.min_feature_expr, params.min_feature_prop, params.min_gene_expr )
 
 DEXSEQ_DTU(DRIMSEQ_FILTER.out)
 
-
-// ./workflows/rnasplice.nf:                ch_txi = TX2GENE_TXIMPORT_STAR_SALMON.out.txi_dtu
-// ./workflows/rnasplice.nf:                ch_txi = TX2GENE_TXIMPORT_STAR_SALMON.out.txi_s
-// ./workflows/rnasplice.nf:                ch_txi,
-// ./workflows/rnasplice.nf:                ch_txi = TX2GENE_TXIMPORT_SALMON.out.txi_dtu
-// ./workflows/rnasplice.nf:                ch_txi = TX2GENE_TXIMPORT_SALMON.out.txi_s
-// .
 
 
 
@@ -191,3 +173,32 @@ DEXSEQ_DTU(DRIMSEQ_FILTER.out)
 //             )
 
 }
+
+
+//  DRIMSEQ_DEXSEQ_DTU_STAR_SALMON (
+//                 TXIMPORT.out,
+//                 TX2GENE_TXIMPORT_STAR_SALMON.out.tximport_tx2gene,
+//                 ch_samplesheet,
+//                 ch_contrastsheet,
+//                 params.n_dexseq_plot,
+//                 params.min_samps_gene_expr,
+//                 params.min_samps_feature_expr,
+//                 params.min_samps_feature_prop,
+//                 params.min_feature_expr,
+//                 params.min_feature_prop,
+//                 params.min_gene_expr
+//             )
+
+
+                    // path: *.txi*.rds (either txi.s.rds or txi.dtu.rds)
+                //path tximport_tx2gene       // path: tximport.tx2gene.tsv
+                    // path: /path/to/samplesheet.csv
+
+
+                    // ./workflows/rnasplice.nf:                ch_txi = TX2GENE_TXIMPORT_STAR_SALMON.out.txi_dtu
+// ./workflows/rnasplice.nf:                ch_txi = TX2GENE_TXIMPORT_STAR_SALMON.out.txi_s
+// ./workflows/rnasplice.nf:                ch_txi,
+// ./workflows/rnasplice.nf:                ch_txi = TX2GENE_TXIMPORT_SALMON.out.txi_dtu
+// ./workflows/rnasplice.nf:                ch_txi = TX2GENE_TXIMPORT_SALMON.out.txi_s
+// .
+

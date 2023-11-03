@@ -8,35 +8,32 @@ process UNTAR {
         'nf-core/ubuntu:20.04' }"
 
     input:
-    tuple val(meta), path(archive)
+    tuple val(name), path(archive)
 
     output:
-    tuple val(meta), path("$prefix"), emit: untar
+    tuple val(name), path("${name}"), emit: untar
     path "versions.yml"             , emit: versions
 
-    when:
-    task.ext.when == null || task.ext.when
 
     script:
     def args  = task.ext.args ?: ''
     def args2 = task.ext.args2 ?: ''
-    prefix    = task.ext.prefix ?: ( meta.id ? "${meta.id}" : archive.baseName.toString().replaceFirst(/\.tar$/, ""))
-
+    
     """
-    mkdir $prefix
+    mkdir ${name}
 
     ## Ensures --strip-components only applied when top level of tar contents is a directory
     ## If just files or multiple directories, place all in prefix
     if [[ \$(tar -taf ${archive} | grep -o -P "^.*?\\/" | uniq | wc -l) -eq 1 ]]; then
         tar \\
-            -C $prefix --strip-components 1 \\
+            -C ${name} --strip-components 1 \\
             -xavf \\
             $args \\
             $archive \\
             $args2
     else
         tar \\
-            -C $prefix \\
+            -C ${name} \\
             -xavf \\
             $args \\
             $archive \\
@@ -52,7 +49,7 @@ process UNTAR {
     stub:
     prefix    = task.ext.prefix ?: ( meta.id ? "${meta.id}" : archive.toString().replaceFirst(/\.[^\.]+(.gz)?$/, ""))
     """
-    mkdir $prefix
+    mkdir ${name}
     touch ${prefix}/file.txt
 
     cat <<-END_VERSIONS > versions.yml

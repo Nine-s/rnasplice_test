@@ -4,7 +4,8 @@ process TXIMPORT {
 
     input:
 
-    path ("salmon/*")
+    //path ("transcripts_quant/*")
+    path (transcript_counts)
     path tx2gene // path to tx2gene.tsv
 
     output:
@@ -40,17 +41,14 @@ process TXIMPORT {
 
     path "versions.yml"                         , emit: versions
 
-    when:
-    task.ext.when == null || task.ext.when
-
     script: // This script is bundled with the pipeline, in nf-core/rnasplice/bin/
     """
-    ${params.basedir}/bin/tximport.R $tx2gene salmon salmon.merged
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        r-base: \$(echo \$(R --version 2>&1) | sed 's/^.*R version //; s/ .*\$//')
-        bioconductor-tximeta: \$(Rscript -e "library(tximeta); cat(as.character(packageVersion('tximeta')))")
-    END_VERSIONS
+    ${params.basedir}/bin/tximport.R $tx2gene ${transcript_counts} salmon.merged
     """
 }
+
+    // cat <<-END_VERSIONS > versions.yml
+    // "${task.process}":
+    //     r-base: \$(echo \$(R --version 2>&1) | sed 's/^.*R version //; s/ .*\$//')
+    //     bioconductor-tximeta: \$(Rscript -e "library(tximeta); cat(as.character(packageVersion('tximeta')))")
+    // END_VERSIONS
