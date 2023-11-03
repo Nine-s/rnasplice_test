@@ -2,9 +2,7 @@ process SAMTOOLS {
     label 'samtools'
     publishDir params.outdir
 
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-    'https://depot.galaxyproject.org/singularity/samtools:1.17--h00cdaf9_0' :
-    'biocontainers/samtools:1.17--h00cdaf9_0' }"
+    container "biocontainers/samtools:v1.7.0_cv4"
 
     input:
     tuple val(sample_name), path(sam_file)
