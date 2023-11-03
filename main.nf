@@ -110,7 +110,7 @@ GFFREAD_TX2GENE ( params.annotation_gtf )
 //TXIMPORT ( SALMON_QUANT.out.transcripts.collect{it[1]}, GFFREAD_TX2GENE.out.tx2gene )
 TXIMPORT ( SALMON_QUANT.out.transcripts, GFFREAD_TX2GENE.out.tx2gene )
 
-DRIMSEQ_FILTER( TXIMPORT.out.txi_dtu, TXIMPORT.out.tximport_tx2gene, params.csv_input, params.min_samps_gene_expr, params.min_samps_feature_expr, params.min_samps_feature_prop, params.min_feature_expr, params.min_feature_prop, params.min_gene_expr )
+DRIMSEQ_FILTER( TXIMPORT.out.txi_s, TXIMPORT.out.tximport_tx2gene, params.csv_input, params.min_samps_gene_expr, params.min_samps_feature_expr, params.min_samps_feature_prop, params.min_feature_expr, params.min_feature_prop, params.min_gene_expr )
 
 DEXSEQ_DTU(DRIMSEQ_FILTER.out.drimseq_samples_tsv, DRIMSEQ_FILTER.out.drimseq_counts_tsv, params.csv_contrastsheet, params.n_dexseq_plot)
 
