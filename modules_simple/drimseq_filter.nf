@@ -18,7 +18,6 @@ process DRIMSEQ_FILTER {
     path "dmDSdata.rds"  , emit: drimseq_dataset_rds
     path "samples.tsv"   , emit: drimseq_samples_tsv
     path "counts.tsv"    , emit: drimseq_counts_tsv
-    path "versions.yml"  , emit: versions
 
     script:
 
@@ -31,8 +30,5 @@ process DRIMSEQ_FILTER {
         $min_feature_prop \\
         $min_gene_expr
 
-    "${task.process}":
-        r-base: \$(echo \$(R --version 2>&1) | sed 's/^.*R version //; s/ .*\$//')
-        bioconductor-drimseq: \$(Rscript -e "library(DRIMSeq); cat(as.character(packageVersion('DRIMSeq')))")
     """
 }

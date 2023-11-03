@@ -30,10 +30,5 @@ process DEXSEQ_COUNT {
     script:
     """
     ${params.basedir}/bin/dexseq_count.py $gff $read_type -f bam $bam -r pos ${name}.clean.count.txt $alignment_quality $strandedness
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        htseq: \$(python -c "import pkg_resources; print(pkg_resources.get_distribution('htseq').version)")
-    END_VERSIONS
     """
 }

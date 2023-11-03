@@ -39,8 +39,7 @@ process TXIMPORT {
 
     path "suppa_tpm.txt"                        , emit: suppa_tpm
 
-    path "versions.yml"                         , emit: versions
-
+    
     script: // This script is bundled with the pipeline, in nf-core/rnasplice/bin/
     """
     ${params.basedir}/bin/tximport.R $tx2gene ${transcript_counts} salmon.merged
