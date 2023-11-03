@@ -8,9 +8,9 @@ process TRIMGALORE {
         tuple val(name), path(reads), val(condition)
     
     output:
-        tuple val(name), path("*val*.f*q"), val(condition), emit: reads
+        tuple val(name), path("*val*.f*q*.gz"), val(condition), emit: reads
     script:
     """
-    trim_galore --paired  ${reads[0]} ${reads[1]}
+    trim_galore --paired ${reads[0]} ${reads[1]}
     """
 }
