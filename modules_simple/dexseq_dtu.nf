@@ -1,9 +1,7 @@
 process DEXSEQ_DTU {
     label 'process_high'
 
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/bioconductor-dexseq:1.36.0--r40_0' :
-        'biocontainers/bioconductor-dexseq:1.36.0--r40_0' }"
+    container "zavolab/r_dge_dtu:3.5.1"
 
     input:
     path drimseq_sample_data

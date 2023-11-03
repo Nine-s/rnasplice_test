@@ -1,11 +1,6 @@
 process TXIMPORT {
-    tag "$tx2gene"
-    label 'process_medium'
-
-    conda "bioconda::bioconductor-tximeta=1.8.0"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/bioconductor-tximeta:1.8.0--r40_0' :
-        'biocontainers/bioconductor-tximeta:1.8.0--r40_0' }"
+ 
+    container "zavolab/r_dge_dtu:3.5.1"
 
     input:
 

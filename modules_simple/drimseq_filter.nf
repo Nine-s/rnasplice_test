@@ -1,9 +1,7 @@
 process DRIMSEQ_FILTER {
     label 'process_medium'
 
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/bioconductor-drimseq:1.18.0--r40_0' :
-        'biocontainers/bioconductor-drimseq:1.18.0--r40_0' }"
+    container "zavolab/r_dge_dtu:3.5.1"
 
     input:
     path txi                    // path: *.txi*.rds (either txi.s.rds or txi.dtu.rds)

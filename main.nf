@@ -23,63 +23,26 @@ include { DEXSEQ_DTU      } from './modules_simple/dexseq_dtu.nf'
 
 workflow{
 
-
-// declare input reads from csv input
-
 read_pairs_ch = Channel
     .fromPath( params.csv_input )
     .splitCsv(header: true, sep: ',')
     .map {row -> tuple(row.sample, [row.fastq_1, row.fastq_2], row.condition)}
     .view()
 
-
-//
-//// STEP 1:
-//
-
 //CAT_FASTQ(read_pairs_ch)
-
-//
-//// STEP 2: FASTQC
-//
 
 FASTQC( read_pairs_ch )
 
-//
-//// STEP 2: trimmgalore
-//
-
 TRIMGALORE( read_pairs_ch )
-
-//
-//// STEP 3: STAR
-//
 
 
 STAR_GENOMEGENERATE(params.genome, params.annotation_gtf)
 
 STAR_ALIGN(TRIMGALORE.out.reads, STAR_GENOMEGENERATE.out, params.annotation_gtf )
 
-//
-//// STEP 5: SAMTOOLS
-//
 SAMTOOLS( STAR_ALIGN.out.sam )
 
-//
-//// STEP 4: SALMON: optional
-//
-// SALMON_INDEX_GENOME()
-
-// SALMON_QUANT_STAR (
-//             ch_transcriptome_bam,
-//             ch_salmon_index,
-//             PREPARE_GENOME.out.gtf,
-//             PREPARE_GENOME.out.transcript_fasta,
-//             alignment_mode,
-//             params.salmon_quant_libtype ?: ''
-//         )
-
-SALMON_QUANT(SAMTOOLS.out, params.annotation_gtf)
+SALMON_QUANT(SAMTOOLS.out, params.transcripts_fasta)
 
 //
 //// STEP 5: Create bigWig coverage files 
@@ -94,8 +57,6 @@ SALMON_QUANT(SAMTOOLS.out, params.annotation_gtf)
 
 //MULTIQC()
 
-
-//TODO: https://github.com/nf-core/rnasplice/blob/dev/subworkflows/local/dexseq_deu.nf
 
 //
 // 11. Differential exon usage with DEXSeq or edgeR

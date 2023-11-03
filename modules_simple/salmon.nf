@@ -1,13 +1,14 @@
 process SALMON_QUANT {
     label 'samtools'
     publishDir params.outdir
+    container "biocontainers/salmon:v0.12.0ds1-1b1-deb_cv1"
     
     input:
-    tuple val(sample_name), path(bam_file)
+    tuple val(sample_name), path(bam_file), val(condition)
     path(ref_transcripts)
     
     output:
-    tuple val(sample_name), path("${sample_name}.sorted.bam"), emit: sample_bam 
+    tuple val(sample_name), path("salmon_quant"), val(condition), emit: sample_bam 
     
     script:
     """
