@@ -45,7 +45,7 @@ process TXIMPORT {
 
     script: // This script is bundled with the pipeline, in nf-core/rnasplice/bin/
     """
-    tximport.R $tx2gene salmon salmon.merged
+    ${params.basedir}/bin/tximport.R $tx2gene salmon salmon.merged
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

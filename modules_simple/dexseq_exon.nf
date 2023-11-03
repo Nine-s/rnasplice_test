@@ -22,7 +22,7 @@ process DEXSEQ_EXON {
     script:
     //${params.baseDir}
     """
-    run_dexseq_exon.R dexseq_clean_counts $gff $samplesheet $contrastsheet $ntop
+    ${params.basedir}/bin/run_dexseq_exon.R dexseq_clean_counts $gff $samplesheet $contrastsheet $ntop
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

@@ -23,7 +23,7 @@ process DRIMSEQ_FILTER {
     script:
 
     """
-    run_drimseq_filter.R $txi $tximport_tx2gene $samplesheet \\
+    ${params.basedir}/bin/run_drimseq_filter.R $txi $tximport_tx2gene $samplesheet \\
         $min_samps_gene_expr \\
         $min_samps_feature_expr \\
         $min_samps_feature_prop \\

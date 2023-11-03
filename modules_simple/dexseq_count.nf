@@ -29,7 +29,7 @@ process DEXSEQ_COUNT {
 
     script:
     """
-    dexseq_count.py $gff $read_type -f bam $bam -r pos ${name}.clean.count.txt $alignment_quality $strandedness
+    ${params.basedir}/bin/dexseq_count.py $gff $read_type -f bam $bam -r pos ${name}.clean.count.txt $alignment_quality $strandedness
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

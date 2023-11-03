@@ -12,7 +12,7 @@ process runSUPPA {
 
     script:
     """
-    suppa.py generateEvents -i \${bam_file} -o events.csv -e \${gtf_file}
-    suppa.py psi -i events.csv -o psi.csv
+    ${params.basedir}/bin/suppa.py generateEvents -i \${bam_file} -o events.csv -e \${gtf_file}
+    ${params.basedir}/bin/suppa.py psi -i events.csv -o psi.csv
     """
 }
