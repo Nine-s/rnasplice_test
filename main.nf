@@ -1,5 +1,3 @@
-nextflow.enable.dsl = 2
-
 //include { PREPARE_GENOME                                       } from '../subworkflows/local/prepare_genome'
 include { CAT_FASTQ } from './modules_simple/cat.nf'
 include { FASTQC } from './modules_simple/fastqc.nf'
@@ -60,7 +58,7 @@ TRIMGALORE( read_pairs_ch )
 
 STAR_GENOMEGENERATE(params.genome, params.annotation_gtf)
 
-STAR_ALIGN(TRIMGALORE.out.reads, STAR_GENOMEGENERATE.out, params )
+STAR_ALIGN(TRIMGALORE.out.reads, STAR_GENOMEGENERATE.out, params.annotation_gtf )
 
 //
 //// STEP 5: SAMTOOLS
