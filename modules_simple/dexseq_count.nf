@@ -1,30 +1,20 @@
 process DEXSEQ_COUNT {
-    tag "$meta.id"
     label 'process_medium'
 
-    conda "bioconda::htseq=2.0.2"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/htseq:2.0.2--py310ha14a713_0' :
-        'biocontainers/htseq:2.0.2--py310ha14a713_0' }"
+    //conda "bioconda::htseq=2.0.2"
+    container "biocontainers/htseq:v0.11.2-1-deb-py3_cv1"
 
     input:
-    tuple val(meta), path(bam)
+    tuple val(name), path(bam)
     path (gff)
     val alignment_quality                   // val params.alignment_quality
 
     output:
-    tuple val(meta), path("*.clean.count.txt"), emit: dexseq_clean_txt
-    path  "versions.yml", emit: versions
-
-    when:
-    task.ext.when == null || task.ext.when
+    tuple val(name), path("*.clean.count.txt"), emit: dexseq_clean_txt
 
     script:
 
-    def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
-
-    def read_type = meta.single_end ? '' : '-p yes'
+    def read_type = '-p yes'
 
     def alignment_quality = "-a ${alignment_quality}"
 
@@ -39,7 +29,7 @@ process DEXSEQ_COUNT {
 
     script:
     """
-    dexseq_count.py $gff $read_type -f bam $bam -r pos ${prefix}.clean.count.txt $alignment_quality $strandedness
+    dexseq_count.py $gff $read_type -f bam $bam -r pos ${name}.clean.count.txt $alignment_quality $strandedness
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

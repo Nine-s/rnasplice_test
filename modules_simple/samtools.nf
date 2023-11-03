@@ -5,10 +5,10 @@ process SAMTOOLS {
     container "biocontainers/samtools:v1.7.0_cv4"
 
     input:
-    tuple val(sample_name), path(sam_file)
+    tuple val(sample_name), path(sam_file), val(condition)
     
     output:
-    tuple val(sample_name), path("${sample_name}.sorted.bam"), emit: bam 
+    tuple val(sample_name), path("${sample_name}.sorted.bam"), val(condition), emit: bam 
     
     script:
     """

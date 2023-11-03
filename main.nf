@@ -108,7 +108,7 @@ DEXSEQ_COUNT (
     params.alignment_quality
 )
 
-    DEXSEQ_EXON (
+DEXSEQ_EXON (
     DEXSEQ_COUNT.out.dexseq_clean_txt.map{ it[1] }.collect(),
     params.annotation_gff,
     params.csv_input,
