@@ -15,8 +15,6 @@ process DEXSEQ_DTU {
     path "DEXSeqResults.*.tsv"  , emit: dexseq_exon_results_tsv
     path "perGeneQValue.*.rds"  , emit: dexseq_gene_results_rds
     path "perGeneQValue.*.tsv"  , emit: dexseq_gene_results_tsv
-    path "versions.yml"         , emit: versions
-
 
     script:
     """
