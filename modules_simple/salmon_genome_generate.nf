@@ -1,6 +1,7 @@
 process SALMON_GENOMEGENERATE {
 
-    container "biocontainers/salmon:v0.12.0ds1-1b1-deb_cv1"
+    container "zavolab/salmon:1.1.0"
+    //container "biocontainers/salmon:v0.12.0ds1-1b1-deb_cv1"
     //container "biocontainers/salmon:v0.7.2ds1-2b1-deb_cv1"
 
     input:
@@ -22,7 +23,7 @@ process SALMON_GENOMEGENERATE {
     sed -i.bak -e 's/>//g' decoys.txt
     cat $transcript_fasta $genome_fasta > $gentrome
 
-    salmon index -t ${gentrome} -p ${params.threads} -i salmon
+    salmon index -t ${gentrome} -d decoy.txt -p ${params.threads} -i salmon
     """
 //--decoys decoys.txt
 }
