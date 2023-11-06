@@ -1,7 +1,7 @@
 process SALMON_QUANT {
-    label 'samtools'
+    
     publishDir params.outdir
-    container "biocontainers/salmon:v0.12.0ds1-1b1-deb_cv1"
+    container "zavolab/salmon:1.1.0"
 
     input:
     tuple val(sample_name), path(reads), val(condition)
