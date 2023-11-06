@@ -5,7 +5,7 @@ process DEXSEQ_COUNT {
     container "biocontainers/htseq:v0.11.2-1-deb-py3_cv1"
 
     input:
-    tuple val(name), path(bam)
+    tuple val(name), path(bam), val(condition)
     path (gff)
     val alignment_quality                   // val params.alignment_quality
 

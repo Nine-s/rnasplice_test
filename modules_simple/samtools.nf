@@ -8,7 +8,7 @@ process SAMTOOLS {
     tuple val(sample_name), path(sam_file), val(condition)
     
     output:
-    tuple val(sample_name), path("${sample_name}.sorted.bam"), val(condition), emit: bam 
+    tuple val(sample_name), path("${sample_name}*bam"), val(condition), emit: bam 
     
     script:
     """
