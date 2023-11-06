@@ -37,15 +37,15 @@ FASTQC( read_pairs_ch )
 TRIMGALORE( read_pairs_ch )
 
 
+
+SALMON_GENOMEGENERATE ( params.genome, params.transcripts_fasta )
+SALMON_QUANT(read_pairs_ch, SALMON_GENOMEGENERATE.out.index)
+
 STAR_GENOMEGENERATE(params.genome, params.annotation_gtf)
 
 STAR_ALIGN(TRIMGALORE.out.reads, STAR_GENOMEGENERATE.out, params.annotation_gtf )
 
 SAMTOOLS( STAR_ALIGN.out.sam )
-
-SALMON_GENOMEGENERATE ( params.genome, params.transcripts_fasta )
-SALMON_QUANT(read_pairs_ch, SALMON_GENOMEGENERATE.out.index)
-
 //
 //// STEP 5: Create bigWig coverage files 
 //
