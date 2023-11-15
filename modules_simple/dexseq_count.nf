@@ -2,7 +2,7 @@ process DEXSEQ_COUNT {
     label 'process_medium'
 
     //conda "bioconda::htseq=2.0.2"
-    container "biocontainers/htseq:v0.11.2-1-deb-py3_cv1"
+    container "biocontainers/htseq:v0.11.2-1-deb-py2_cv1"
 
     input:
     tuple val(name), path(bam), val(condition)

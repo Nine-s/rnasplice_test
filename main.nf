@@ -46,6 +46,7 @@ STAR_GENOMEGENERATE(params.genome, params.annotation_gtf)
 STAR_ALIGN(TRIMGALORE.out.reads, STAR_GENOMEGENERATE.out, params.annotation_gtf )
 
 SAMTOOLS( STAR_ALIGN.out.sam )
+
 //
 //// STEP 5: Create bigWig coverage files 
 //
@@ -58,6 +59,7 @@ SAMTOOLS( STAR_ALIGN.out.sam )
 //
 
 //MULTIQC()
+
 
 
 //
@@ -104,11 +106,26 @@ DEXSEQ_EXON (
 //         // TX2GENE_TXIMPORT_STAR_SALMON (
 //         //     ch_salmon_results,
 //         //     PREPARE_GENOME.out.gtf
-
 GFFREAD_TX2GENE ( params.annotation_gtf )
 
+// //salmon_results
+// SALMON_QUANT.out.transcripts.map {
+//     meta, prefix ->
+//         tgz = prefix[0].toString().endsWith(".tar.gz") ? true : false
+//         [ meta + [tgz: tgz], prefix ]
+// }
+// .branch{
+//     tar: it[0].tgz == true
+//     dir: it[0].tgz == false
+// }
+// .set{ salmon_results }
+// UNTAR ( salmon_results.tar )
+// salmon_results = salmon_results.dir.mix(UNTAR.out.untar)
+
+salmon_results = MERGE_RESULTS(SALMON_QUANT.out.transcripts.collect())
+
 //TXIMPORT ( SALMON_QUANT.out.transcripts.collect{it[1]}, GFFREAD_TX2GENE.out.tx2gene )
-TXIMPORT ( SALMON_QUANT.out.transcripts, GFFREAD_TX2GENE.out.tx2gene )
+TXIMPORT ( salmon_results, GFFREAD_TX2GENE.out.tx2gene )
 
 DRIMSEQ_FILTER( TXIMPORT.out.txi_s, TXIMPORT.out.tximport_tx2gene, params.csv_input, params.min_samps_gene_expr, params.min_samps_feature_expr, params.min_samps_feature_prop, params.min_feature_expr, params.min_feature_prop, params.min_gene_expr )
 
@@ -202,3 +219,19 @@ DEXSEQ_DTU(DRIMSEQ_FILTER.out.drimseq_samples_tsv, DRIMSEQ_FILTER.out.drimseq_co
 // ./workflows/rnasplice.nf:                ch_txi = TX2GENE_TXIMPORT_SALMON.out.txi_s
 // .
 
+
+process MERGE_RESULTS {
+    publishDir params.outdir
+
+    input:
+    path out_folders
+    
+    output:
+    path("salmon"), emit: gathered_bam
+    
+    script:
+    """
+    mkdir salmon
+    mv  ${out_folders} salmon
+    """
+}
