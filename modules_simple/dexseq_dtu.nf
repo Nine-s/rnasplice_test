@@ -1,7 +1,8 @@
 process DEXSEQ_DTU {
     label 'process_high'
 
-    container "zavolab/r_dge_dtu:3.5.1"
+    //container "zavolab/r_dge_dtu:3.5.1"
+    container "biocontainers/htseq:v0.11.2-1-deb-py3_cv1"
 
     input:
     path drimseq_sample_data
