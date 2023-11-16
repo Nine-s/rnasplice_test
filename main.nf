@@ -222,6 +222,7 @@ DEXSEQ_DTU(DRIMSEQ_FILTER.out.drimseq_samples_tsv, DRIMSEQ_FILTER.out.drimseq_co
 
 process MERGE_RESULTS {
     publishDir params.outdir
+    container "zavolab/salmon:1.1.0"
 
     input:
     path out_folders
