@@ -24,6 +24,8 @@ library(BiocParallel)
 
 library(DEXSeq)
 
+library(base)
+
 
 # Define helper functions
 
