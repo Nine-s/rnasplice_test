@@ -1,3 +1,5 @@
 sample,fastq_1,fastq_2,condition
-CONTROL_REP1,/workspace/ninon/data/medium_droso/SRR14404397_1.fastq.gz,/workspace/ninon/data/medium_droso/SRR14404397_2.fastq.gz,CONTROL
-TREATMENT_REP1,/workspace/ninon/data/small_droso/SRR14197369_1.fastq.gz,/workspace/ninon/data/small_droso/SRR14197369_2.fastq.gz,TREATMENT
+CONTROL_REP1,/workdir/ninon/sra/ERR11680477_1.fastq.gz,/workdir/ninon/sra/ERR11680477_2.fastq.gz,CONTROL
+CONTROL_REP2,/workdir/ninon/sra/ERR11680476_1.fastq.gz,/workdir/ninon/sra/ERR11680476_2.fastq.gz,CONTROL
+TREATMENT_REP1,/workdir/ninon/sra/ERR11680475_1.fastq.gz,/workdir/ninon/sra/ERR11680475_2.fastq.gz,TREATMENT
+TREATMENT_REP2,/workdir/ninon/sra/ERR11680474_1.fastq.gz,/workdir/ninon/sra/ERR11680474_2.fastq.gz,TREATMENT
