@@ -1,13 +1,13 @@
 process DEXSEQ_DTU {
     label 'ALL'
 
-    //container "zavolab/r_dge_dtu:3.5.1"
+    container "zavolab/r_dge_dtu:3.5.1"
     //container "biocontainers/htseq:v0.11.2-1-deb-py3_cv1"
     //container "biocontainers/htseq:v0.11.2-1-deb-py2_cv1"
     //container "machalen/dexseq:latest"
     //container 'biocontainers/htseq:2.0.2--py310ha14a713_0' //noit found
     //container "nfcore/rnaseq:1.4.2"
-    container "filipejesus/dexseq:3.8"
+    //container "filipejesus/dexseq:3.8"
 
     input:
     path drimseq_sample_data
