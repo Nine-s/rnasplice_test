@@ -1,11 +1,11 @@
 process DEXSEQ_DTU {
     label 'ALL'
 
-    container "zavolab/r_dge_dtu:3.5.1"
+    //container "zavolab/r_dge_dtu:3.5.1"
     //container "biocontainers/htseq:v0.11.2-1-deb-py3_cv1"
     //container "biocontainers/htseq:v0.11.2-1-deb-py2_cv1"
     //container "machalen/dexseq:latest"
-    container 'quay.io/biocontainers/htseq:2.0.2--py310ha14a713_0' //noit found
+    container 'quay.io/biocontainers/bioconductor-dexseq:1.36.0--r40_0' //noit found
     //container "nfcore/rnaseq:1.4.2"
     //container "filipejesus/dexseq:3.8"
 
