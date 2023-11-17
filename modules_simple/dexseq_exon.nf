@@ -1,5 +1,5 @@
 process DEXSEQ_EXON {
-    label 'process_high'
+    label 'ALL'
 
     container "zavolab/r_dge_dtu:3.5.1"
 

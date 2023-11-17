@@ -1,6 +1,6 @@
 process GFFREAD_TX2GENE {
     tag "$gtf"
-    label 'process_low'
+    label 'ALL'
 
     //conda "bioconda::gffread=0.12.1"
     //container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?

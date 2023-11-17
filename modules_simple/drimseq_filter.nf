@@ -1,5 +1,5 @@
 process DRIMSEQ_FILTER {
-    label 'process_medium'
+    label 'ALL'
 
     container "zavolab/r_dge_dtu:3.5.1"
 

@@ -1,6 +1,6 @@
 
 process STAR_ALIGN {
-    label 'star'
+    label 'ALL'
     publishDir params.outdir
     container "mgibio/star:2.7.0f"
 

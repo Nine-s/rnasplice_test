@@ -1,5 +1,5 @@
 process MULTIQC {
-    label 'process_single'
+    label 'ALL'
 
     container "staphb/multiqc:1.8"
 

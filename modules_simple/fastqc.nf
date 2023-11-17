@@ -1,7 +1,7 @@
 
 
 process FASTQC {
-    label 'fastqc'
+    label 'ALL'
     tag "fastqc $sample_id"
     publishDir params.outdir
     //container "biocontainers/fastqc:v0.11.9_cv5"

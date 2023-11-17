@@ -1,5 +1,6 @@
 
 process TRIMGALORE {
+    label 'ALL'
 
     container "dukegcb/trim-galore:0.4.4"
 

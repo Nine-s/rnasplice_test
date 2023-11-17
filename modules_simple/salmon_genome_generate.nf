@@ -1,5 +1,6 @@
 process SALMON_GENOMEGENERATE {
-
+    label 'ALL'
+    
     container "zavolab/salmon:1.1.0"
     //container "biocontainers/salmon:v0.12.0ds1-1b1-deb_cv1"
     //container "biocontainers/salmon:v0.7.2ds1-2b1-deb_cv1"

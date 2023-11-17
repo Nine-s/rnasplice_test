@@ -1,5 +1,5 @@
 process STAR_GENOMEGENERATE {
-    label 'star'
+    label 'ALL'
     publishDir params.outdir
     container "mgibio/star:2.7.0f"
     

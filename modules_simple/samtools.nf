@@ -1,5 +1,5 @@
 process SAMTOOLS {
-    label 'samtools'
+    label 'ALL'
     publishDir params.outdir
 
     container "biocontainers/samtools:v1.7.0_cv4"

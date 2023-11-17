@@ -1,4 +1,5 @@
 process TXIMPORT {
+    label 'ALL'
  
     container "zavolab/r_dge_dtu:3.5.1"
 

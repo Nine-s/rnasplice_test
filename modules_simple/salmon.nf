@@ -1,4 +1,5 @@
 process SALMON_QUANT {
+    label 'ALL'
     
     publishDir params.outdir
     container "zavolab/salmon:1.1.0"

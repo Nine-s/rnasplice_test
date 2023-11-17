@@ -1,5 +1,6 @@
 
 process runSUPPA {
+    label 'ALL'
 
     // Input GTF file, BAM files, and event definition file
     input:
