@@ -39,7 +39,7 @@ TRIMGALORE( read_pairs_ch )
 
 
 SALMON_GENOMEGENERATE ( params.genome, params.transcripts_fasta )
-SALMON_QUANT(read_pairs_ch, SALMON_GENOMEGENERATE.out.index)
+SALMON_QUANT(TRIMGALORE.out.reads, SALMON_GENOMEGENERATE.out.index)
 
 STAR_GENOMEGENERATE(params.genome, params.annotation_gtf)
 
