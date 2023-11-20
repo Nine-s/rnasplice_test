@@ -66,7 +66,7 @@ SAMTOOLS( STAR_ALIGN.out.sam )
 //get gff for this part
 DEXSEQ_COUNT (
     SAMTOOLS.out.bam,
-    params.annotation_gtf,
+    params.annotation_gff,
     params.alignment_quality
 )
 
