@@ -66,7 +66,7 @@ SAMTOOLS( STAR_ALIGN.out.sam )
 //get gff for this part
 DEXSEQ_COUNT (
     SAMTOOLS.out.bam,
-    params.annotation_gff,
+    params.annotation_gtf,
     params.alignment_quality
 )
 
@@ -74,7 +74,7 @@ dexseq_clean_counts = MERGE_RESULTS_DEXSEQ(DEXSEQ_COUNT.out.dexseq_clean_txt.col
 
 DEXSEQ_EXON (
     dexseq_clean_counts,
-    params.annotation_gff,
+    params.annotation_gtf,
     params.csv_input,
     params.csv_contrastsheet,
     params.n_dexseq_plot
