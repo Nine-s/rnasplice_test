@@ -9,7 +9,7 @@ include { SAMTOOLS } from './modules_simple/samtools.nf'
 include { GFFREAD_TX2GENE  } from './modules_simple/gffread_tx2gene.nf'
 include { TXIMPORT         } from './modules_simple/tximport.nf'
 include { UNTAR            } from './modules_simple/untar.nf'
-
+include { DEXSEQ_ANNOTATION } from './modules_simple/dexseq_annotation.nf'
 include { SALMON_GENOMEGENERATE } from './modules_simple/salmon_genome_generate.nf'
 include { SALMON_QUANT  } from './modules_simple/salmon.nf'
 include { DEXSEQ_COUNT } from './modules_simple/dexseq_count.nf'
@@ -63,10 +63,12 @@ SAMTOOLS( STAR_ALIGN.out.sam )
 // 11. Differential exon usage with DEXSeq or edgeR
 //
 
+DEXSEQ_ANNOTATION(params.annotation_gtf)
+
 //get gff for this part
 DEXSEQ_COUNT (
     SAMTOOLS.out.bam,
-    params.annotation_gtf,
+    DEXSEQ_ANNOTATION.out.gff,
     params.alignment_quality
 )
 
@@ -74,7 +76,7 @@ dexseq_clean_counts = MERGE_RESULTS_DEXSEQ(DEXSEQ_COUNT.out.dexseq_clean_txt.col
 
 DEXSEQ_EXON (
     dexseq_clean_counts,
-    params.annotation_gtf,
+    DEXSEQ_ANNOTATION.out.gff,
     params.csv_input,
     params.csv_contrastsheet,
     params.n_dexseq_plot
