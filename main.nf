@@ -50,7 +50,6 @@ SAMTOOLS( STAR_ALIGN.out.sam )
 //
 //// STEP 5: Create bigWig coverage files 
 //
-//what for????
 //BEDTOOLS_GENOMECOV()
 //BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG()
 
@@ -59,8 +58,6 @@ SAMTOOLS( STAR_ALIGN.out.sam )
 //
 
 //MULTIQC()
-
-
 
 //
 // 11. Differential exon usage with DEXSeq or edgeR
@@ -87,46 +84,10 @@ DEXSEQ_EXON (
 
 // https://github.com/nf-core/rnasplice/blob/dev/subworkflows/local/drimseq_dexseq_dtu.nf
 
-//salmon_results = SALMON_QUANT.out.transcripts
-
-
-// salmon_results
-//     .map {
-//         meta, prefix ->
-//             tgz = prefix[0].toString().endsWith(".tar.gz") ? true : false
-//             [ meta + [tgz: tgz], prefix ]
-//     }
-//     .branch{
-//         tar: it[0].tgz == true
-//         dir: it[0].tgz == false
-//     }
-//     .set{ salmon_results }
-// UNTAR ( salmon_results.tar )
-// salmon_results = salmon_results.dir.mix(UNTAR.out.untar)
-
-
-//         // TX2GENE_TXIMPORT_STAR_SALMON (
-//         //     ch_salmon_results,
-//         //     PREPARE_GENOME.out.gtf
 GFFREAD_TX2GENE ( params.annotation_gtf )
-
-// //salmon_results
-// SALMON_QUANT.out.transcripts.map {
-//     meta, prefix ->
-//         tgz = prefix[0].toString().endsWith(".tar.gz") ? true : false
-//         [ meta + [tgz: tgz], prefix ]
-// }
-// .branch{
-//     tar: it[0].tgz == true
-//     dir: it[0].tgz == false
-// }
-// .set{ salmon_results }
-// UNTAR ( salmon_results.tar )
-// salmon_results = salmon_results.dir.mix(UNTAR.out.untar)
 
 salmon_results = MERGE_RESULTS_SALMON(SALMON_QUANT.out.transcripts.collect())
 
-//TXIMPORT ( SALMON_QUANT.out.transcripts.collect{it[1]}, GFFREAD_TX2GENE.out.tx2gene )
 TXIMPORT ( salmon_results, GFFREAD_TX2GENE.out.tx2gene )
 
 DRIMSEQ_FILTER( TXIMPORT.out.txi_dtu, TXIMPORT.out.tximport_tx2gene, params.csv_input, params.min_samps_gene_expr, params.min_samps_feature_expr, params.min_samps_feature_prop, params.min_feature_expr, params.min_feature_prop, params.min_gene_expr )

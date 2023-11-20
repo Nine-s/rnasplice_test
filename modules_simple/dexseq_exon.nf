@@ -4,7 +4,7 @@ process DEXSEQ_EXON {
     container 'quay.io/biocontainers/bioconductor-dexseq:1.36.0--r40_0' 
 
     input:
-    path ("dexseq_clean_counts/*")    // path: dexseq_clean_counts
+    path (dexseq_clean_counts)    // path: dexseq_clean_counts
     path gff                          // path: dexseq_gff
     path samplesheet                  // path: samplesheet
     path contrastsheet                // path: contrastsheet
@@ -21,7 +21,8 @@ process DEXSEQ_EXON {
     script:
     //${params.baseDir}
     """
-    ${params.basedir}/bin/run_dexseq_exon.R dexseq_clean_counts $gff $samplesheet $contrastsheet $ntop
+
+    ${params.basedir}/bin/run_dexseq_exon.R ${dexseq_clean_counts} $gff $samplesheet $contrastsheet $ntop
 
     """
 }
