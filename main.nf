@@ -76,7 +76,7 @@ DEXSEQ_COUNT (
 dexseq_clean_counts = MERGE_RESULTS_DEXSEQ(DEXSEQ_COUNT.out.dexseq_clean_txt.collect())
 
 DEXSEQ_EXON (
-    dexseq_clean_counts,
+    dexseq_clean_counts.out.gathered_counts,
     params.annotation_gff,
     params.csv_input,
     params.csv_contrastsheet,
@@ -248,7 +248,7 @@ process MERGE_RESULTS_DEXSEQ {
     path(out_files)
     
     output:
-    path("dexseq_clean_counts"), emit: gathered_bam
+    path("dexseq_clean_counts"), emit: gathered_counts
     
     script:
     """
