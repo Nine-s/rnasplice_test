@@ -245,7 +245,7 @@ process MERGE_RESULTS_DEXSEQ {
     container "zavolab/salmon:1.1.0"
 
     input:
-    tuple val(name), path(out_files)
+    path(out_files)
     
     output:
     path("dexseq_clean_counts"), emit: gathered_bam

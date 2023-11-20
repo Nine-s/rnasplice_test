@@ -9,7 +9,7 @@ process DEXSEQ_COUNT {
     val alignment_quality                   // val params.alignment_quality
 
     output:
-    tuple val(name), path("*.clean.count.txt"), emit: dexseq_clean_txt
+    path("*.clean.count.txt"), emit: dexseq_clean_txt
 
     script:
 
