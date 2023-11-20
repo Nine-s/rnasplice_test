@@ -1,7 +1,7 @@
 process DEXSEQ_EXON {
     label 'ALL'
 
-    container "zavolab/r_dge_dtu:3.5.1"
+    container 'quay.io/biocontainers/bioconductor-dexseq:1.36.0--r40_0' 
 
     input:
     path ("dexseq_clean_counts/*")    // path: dexseq_clean_counts
