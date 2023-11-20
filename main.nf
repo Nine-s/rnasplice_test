@@ -73,8 +73,10 @@ DEXSEQ_COUNT (
     params.alignment_quality
 )
 
+dexseq_clean_counts = MERGE_RESULTS_DEXSEQ(DEXSEQ_COUNT.out.dexseq_clean_txt.collect())
+
 DEXSEQ_EXON (
-    DEXSEQ_COUNT.out.dexseq_clean_txt.map{ it[1] }.collect(),
+    dexseq_clean_counts,
     params.annotation_gff,
     params.csv_input,
     params.csv_contrastsheet,
@@ -122,7 +124,7 @@ GFFREAD_TX2GENE ( params.annotation_gtf )
 // UNTAR ( salmon_results.tar )
 // salmon_results = salmon_results.dir.mix(UNTAR.out.untar)
 
-salmon_results = MERGE_RESULTS(SALMON_QUANT.out.transcripts.collect())
+salmon_results = MERGE_RESULTS_SALMON(SALMON_QUANT.out.transcripts.collect())
 
 //TXIMPORT ( SALMON_QUANT.out.transcripts.collect{it[1]}, GFFREAD_TX2GENE.out.tx2gene )
 TXIMPORT ( salmon_results, GFFREAD_TX2GENE.out.tx2gene )
@@ -220,7 +222,7 @@ DEXSEQ_DTU(DRIMSEQ_FILTER.out.drimseq_samples_tsv, DRIMSEQ_FILTER.out.drimseq_co
 // .
 
 
-process MERGE_RESULTS {
+process MERGE_RESULTS_SALMON {
     publishDir params.outdir
     container "zavolab/salmon:1.1.0"
 
@@ -234,5 +236,23 @@ process MERGE_RESULTS {
     """
     mkdir salmon
     mv  ${out_folders} salmon
+    """
+}
+
+
+process MERGE_RESULTS_DEXSEQ {
+    publishDir params.outdir
+    container "zavolab/salmon:1.1.0"
+
+    input:
+    path out_files
+    
+    output:
+    path("dexseq_clean_counts"), emit: gathered_bam
+    
+    script:
+    """
+    mkdir dexseq_clean_counts
+    mv  ${out_files} dexseq_clean_counts
     """
 }
