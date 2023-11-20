@@ -24,7 +24,9 @@ process STAR_ALIGN {
 			--alignSoftClipAtReferenceEnds No \\
 			--outFilterIntronMotifs RemoveNoncanonical \\
 			--outSAMattrIHstart 0 \\
-            --readFilesCommand zcat
+            --readFilesCommand zcat \\
+            --outSAMsummaryFile alignment_summary.txt
+
 	elif [[ ${params.strand} == "unstranded" ]]; then
 		STAR \\
             --genomeDir . \\
@@ -36,7 +38,8 @@ process STAR_ALIGN {
         	--outFileNamePrefix ${sample_name}. \\
         	--sjdbGTFfile ${annotation} \\
 			--outSAMattrIHstart 0 \\
-            --readFilesCommand zcat
+            --readFilesCommand zcat \\
+            --outSAMsummaryFile alignment_summary.txt
 	else  
 		echo ${params.strand} > error_strandness.txt
 		echo "strandness cannot be determined" >> error_strandness.txt
