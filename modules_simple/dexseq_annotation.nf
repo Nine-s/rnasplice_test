@@ -7,17 +7,15 @@ process DEXSEQ_ANNOTATION {
 
     input:
     path gtf         // path gtf file
-    val aggregation  // val params.aggregation
+    //val aggregation  // val params.aggregation
 
     output:
     path "*.gff"        , emit: gff
 
     script:
 
-    def aggregation = aggregation ? '' : '-r no'
-
     """
-    dexseq_prepare_annotation.py $gtf ${prefix}.gff $aggregation
+    dexseq_prepare_annotation.py $gtf DEXSeq.gff
     """
 }
 

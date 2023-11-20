@@ -63,7 +63,7 @@ SAMTOOLS( STAR_ALIGN.out.sam )
 // 11. Differential exon usage with DEXSeq or edgeR
 //
 
-DEXSEQ_ANNOTATION(params.annotation_gtf, params.aggregation)
+DEXSEQ_ANNOTATION(params.annotation_gtf)//, params.aggregation)
 
 //get gff for this part
 DEXSEQ_COUNT (
