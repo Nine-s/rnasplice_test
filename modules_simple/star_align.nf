@@ -25,7 +25,6 @@ process STAR_ALIGN {
 			--outFilterIntronMotifs RemoveNoncanonical \\
 			--outSAMattrIHstart 0 \\
             --readFilesCommand zcat \\
-            --outSAMsummaryFile alignment_summary.txt
 
 	elif [[ ${params.strand} == "unstranded" ]]; then
 		STAR \\
@@ -39,7 +38,6 @@ process STAR_ALIGN {
         	--sjdbGTFfile ${annotation} \\
 			--outSAMattrIHstart 0 \\
             --readFilesCommand zcat \\
-            --outSAMsummaryFile alignment_summary.txt
 	else  
 		echo ${params.strand} > error_strandness.txt
 		echo "strandness cannot be determined" >> error_strandness.txt

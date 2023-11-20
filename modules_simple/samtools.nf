@@ -9,9 +9,10 @@ process SAMTOOLS {
     
     output:
     tuple val(sample_name), path("${sample_name}*bam"), val(condition), emit: bam 
-    
+    path("alignment_summary.txt"), emit: log
     script:
     """
+    samtools flagstat ${sam_file} > alignment_summary.txt
     samtools view -bS ${sam_file} -@ ${params.threads} | samtools sort -o ${sample_name}.sorted.bam -T tmp  -@ ${params.threads} 
     """
     
