@@ -2,7 +2,7 @@
 include { CAT_FASTQ } from './modules_simple/cat.nf'
 include { FASTQC } from './modules_simple/fastqc.nf'
 include { TRIMGALORE } from './modules_simple/trimgalore.nf'
-include { CUSTOM_GETCHROMSIZES              } from '../../modules_simple/getchromsizes.nf'
+include { CUSTOM_GETCHROMSIZES              } from './modules_simple/getchromsizes.nf'
 include { GFFREAD_TX2GENE  } from './modules_simple/gffread_tx2gene.nf'
 include { TXIMPORT         } from './modules_simple/tximport.nf'
 include { UNTAR            } from './modules_simple/untar.nf'
@@ -57,11 +57,11 @@ SAMTOOLS( STAR_ALIGN.out.sam )
 //
 //// STEP 5: Create bigWig coverage files 
 //
-CUSTOM_GETCHROMSIZES()
+CUSTOM_GETCHROMSIZES(params.genome)
 BEDTOOLS_GENOMECOV(SAMTOOLS.out.bam)
 BEDCLIP(BEDTOOLS_GENOMECOV.out.bedgraph_forward, CUSTOM_GETCHROMSIZES.out.sizes)
 BEDGRAPHTOBIGWIG(BEDTOOLS_GENOMECOV.out.bedgraph_forward, CUSTOM_GETCHROMSIZES.out.sizes)
-
+//TODO add reverse
 //
 //9. Summarize QC (MultiQC)
 //
