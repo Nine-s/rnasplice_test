@@ -4,23 +4,23 @@ process CUSTOM_GETCHROMSIZES {
     container "quay.io/biocontainers/samtools:1.16.1--h6899075_1"
 
     input:
-    path(fasta)
+    path(reference_genome)
 
     output:
-    tuple val("genome"), path ("*.sizes"), emit: sizes
-    tuple val("genome"), path ("*.fai")  , emit: fai
-    tuple val("genome"), path ("*.gzi")  , emit: gzi, optional: true
+    path ("*.sizes"), emit: sizes
+    path ("*.fai")  , emit: fai
+    path ("*.gzi")  , emit: gzi, optional: true
 
     script:
     """
-    samtools faidx ${fasta}
-    cut -f 1,2 ${fasta}.fai > ${fasta}.sizes
+    samtools faidx ${reference_genome}
+    cut -f 1,2 ${reference_genome}.fai > ${reference_genome}.sizes
     """
 
 }
 
     // stub:
     // """
-    // touch ${fasta}.fai
+    // touch ${reference_genome}.fai
     // touch ${fasta}.sizes
     // """
