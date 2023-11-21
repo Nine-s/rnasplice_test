@@ -1,7 +1,7 @@
 
 process DEXSEQ_ANNOTATION {
     tag "$gtf"
-    label 'process_medium'
+    label 'ALL'
 
     container 'quay.io/biocontainers/htseq:2.0.2--py310ha14a713_0'
 

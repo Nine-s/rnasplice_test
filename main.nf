@@ -2,24 +2,31 @@
 include { CAT_FASTQ } from './modules_simple/cat.nf'
 include { FASTQC } from './modules_simple/fastqc.nf'
 include { TRIMGALORE } from './modules_simple/trimgalore.nf'
+include { CUSTOM_GETCHROMSIZES              } from '../../modules_simple/getchromsizes.nf'
+include { GFFREAD_TX2GENE  } from './modules_simple/gffread_tx2gene.nf'
+include { TXIMPORT         } from './modules_simple/tximport.nf'
+include { UNTAR            } from './modules_simple/untar.nf'
+
 include { STAR_GENOMEGENERATE } from './modules_simple/star_genome_generate.nf'
 include { STAR_ALIGN } from './modules_simple/star_align.nf'
 include { SAMTOOLS } from './modules_simple/samtools.nf'
 
-include { GFFREAD_TX2GENE  } from './modules_simple/gffread_tx2gene.nf'
-include { TXIMPORT         } from './modules_simple/tximport.nf'
-include { UNTAR            } from './modules_simple/untar.nf'
-include { DEXSEQ_ANNOTATION } from './modules_simple/dexseq_annotation.nf'
 include { SALMON_GENOMEGENERATE } from './modules_simple/salmon_genome_generate.nf'
 include { SALMON_QUANT  } from './modules_simple/salmon.nf'
-include { DEXSEQ_COUNT } from './modules_simple/dexseq_count.nf'
-include { DEXSEQ_EXON } from './modules_simple/dexseq_exon.nf'
-//include { BEDTOOLS_GENOMECOV } from './modules_simple/bedtools_genomecov'
+
+include { BEDTOOLS_GENOMECOV } from './modules_simple/bedtools_genomecov'
+include { BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG as BEDGRAPH_TO_BIGWIG_FORWARD } from '../subworkflows/nf-core/bedgraph_bedclip_bedgraphtobigwig/main'
+include { BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG as BEDGRAPH_TO_BIGWIG_REVERSE } from '../subworkflows/nf-core/bedgraph_bedclip_bedgraphtobigwig/main'
+
 include { MULTIQC } from './modules_simple/multiqc.nf'
-//include { DIFFSPLICE } from './modules_simple/modules_simple/suppa_splicing_analysis.nf'
+
+include { DEXSEQ_ANNOTATION } from './modules_simple/dexseq_annotation.nf'
 include { DRIMSEQ_FILTER  } from './modules_simple/drimseq_filter.nf'
 include { DEXSEQ_DTU      } from './modules_simple/dexseq_dtu.nf'
+include { DEXSEQ_COUNT } from './modules_simple/dexseq_count.nf'
+include { DEXSEQ_EXON } from './modules_simple/dexseq_exon.nf'
 //include { TX2GENE_TXIMPORT as TX2GENE_TXIMPORT_STAR_SALMON     } from 
+//include { DIFFSPLICE } from './modules_simple/modules_simple/suppa_splicing_analysis.nf'
 //'../subworkflows/local/tx2gene_tximport'
 
 workflow{
@@ -50,8 +57,10 @@ SAMTOOLS( STAR_ALIGN.out.sam )
 //
 //// STEP 5: Create bigWig coverage files 
 //
-//BEDTOOLS_GENOMECOV()
-//BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG()
+CUSTOM_GETCHROMSIZES()
+BEDTOOLS_GENOMECOV(SAMTOOLS.out.bam)
+BEDCLIP(BEDTOOLS_GENOMECOV.out.bedgraph_forward, CUSTOM_GETCHROMSIZES.out.sizes)
+BEDGRAPHTOBIGWIG(BEDTOOLS_GENOMECOV.out.bedgraph_forward, CUSTOM_GETCHROMSIZES.out.sizes)
 
 //
 //9. Summarize QC (MultiQC)
@@ -155,35 +164,6 @@ DEXSEQ_DTU(DRIMSEQ_FILTER.out.drimseq_samples_tsv, DRIMSEQ_FILTER.out.drimseq_co
 //             )
 
 }
-
-
-//  DRIMSEQ_DEXSEQ_DTU_STAR_SALMON (
-//                 TXIMPORT.out,
-//                 TX2GENE_TXIMPORT_STAR_SALMON.out.tximport_tx2gene,
-//                 ch_samplesheet,
-//                 ch_contrastsheet,
-//                 params.n_dexseq_plot,
-//                 params.min_samps_gene_expr,
-//                 params.min_samps_feature_expr,
-//                 params.min_samps_feature_prop,
-//                 params.min_feature_expr,
-//                 params.min_feature_prop,
-//                 params.min_gene_expr
-//             )
-
-
-                    // path: *.txi*.rds (either txi.s.rds or txi.dtu.rds)
-                //path tximport_tx2gene       // path: tximport.tx2gene.tsv
-                    // path: /path/to/samplesheet.csv
-
-
-                    // ./workflows/rnasplice.nf:                ch_txi = TX2GENE_TXIMPORT_STAR_SALMON.out.txi_dtu
-// ./workflows/rnasplice.nf:                ch_txi = TX2GENE_TXIMPORT_STAR_SALMON.out.txi_s
-// ./workflows/rnasplice.nf:                ch_txi,
-// ./workflows/rnasplice.nf:                ch_txi = TX2GENE_TXIMPORT_SALMON.out.txi_dtu
-// ./workflows/rnasplice.nf:                ch_txi = TX2GENE_TXIMPORT_SALMON.out.txi_s
-// .
-
 
 process MERGE_RESULTS_SALMON {
     publishDir params.outdir
