@@ -17,17 +17,17 @@ process DEXSEQ_COUNT {
 
     def alignment_quality = "-a ${alignment_quality}"
 
-    def strandedness = ''
+    def strand = ''
     if (params.strand == 'forward') {
-        strandedness = '-s yes'
+        strand = '-s yes'
     } else if (params.strand == 'reverse') {
-        strandedness = '-s reverse'
+        strand = '-s reverse'
     } else if (params.strand == 'unstranded') {
-        strandedness = '-s no'
+        strand = '-s no'
     }
 
     script:
     """
-    ${params.basedir}/bin/dexseq_count.py $gff $read_type -f bam $bam -r pos ${name}.clean.count.txt $alignment_quality $strandedness
+    ${params.basedir}/bin/dexseq_count.py $gff $read_type -f bam $bam -r pos ${name}.clean.count.txt $alignment_quality $strand
     """
 }

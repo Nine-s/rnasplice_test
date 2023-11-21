@@ -17,9 +17,10 @@ process CUSTOM_GETCHROMSIZES {
     cut -f 1,2 ${fasta}.fai > ${fasta}.sizes
     """
 
-    stub:
-    """
-    touch ${fasta}.fai
-    touch ${fasta}.sizes
-    """
 }
+
+    // stub:
+    // """
+    // touch ${fasta}.fai
+    // touch ${fasta}.sizes
+    // """

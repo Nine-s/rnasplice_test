@@ -13,7 +13,7 @@ process BEDTOOLS_GENOMECOV {
     script:
     def prefix_forward = "${name}.forward"
     def prefix_reverse = "${name}.reverse"
-    if (params.strandedness == 'reverse') {
+    if (params.strand == 'reverse') {
         prefix_forward = "${name}.reverse"
         prefix_reverse = "${name}.forward"
     }
