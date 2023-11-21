@@ -14,7 +14,7 @@ include { SAMTOOLS } from './modules_simple/samtools.nf'
 include { SALMON_GENOMEGENERATE } from './modules_simple/salmon_genome_generate.nf'
 include { SALMON_QUANT  } from './modules_simple/salmon.nf'
 
-include { BEDTOOLS_GENOMECOV } from './modules_simple/bedtools_genomecov.nf'
+include { BEDTOOLS_GENOMECOV } from './modules_simple/bedtoolsgenomecov.nf'
 include { BEDGRAPHTOBIGWIG as BEDGRAPH_TO_BIGWIG_FORWARD } from './modules_simple/bedgraphtobigwig.nf'
 include { BEDGRAPHTOBIGWIG as BEDGRAPH_TO_BIGWIG_REVERSE } from './modules_simple/bedgraphtobigwig.nf'
 include { BEDCLIP as BEDCLIP_FORWARD } from './modules_simple/bedclip.nf'
