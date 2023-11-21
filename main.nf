@@ -14,9 +14,11 @@ include { SAMTOOLS } from './modules_simple/samtools.nf'
 include { SALMON_GENOMEGENERATE } from './modules_simple/salmon_genome_generate.nf'
 include { SALMON_QUANT  } from './modules_simple/salmon.nf'
 
-include { BEDTOOLS_GENOMECOV } from './modules_simple/bedtools_genomecov'
-include { BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG as BEDGRAPH_TO_BIGWIG_FORWARD } from '../subworkflows/nf-core/bedgraph_bedclip_bedgraphtobigwig/main'
-include { BEDGRAPH_BEDCLIP_BEDGRAPHTOBIGWIG as BEDGRAPH_TO_BIGWIG_REVERSE } from '../subworkflows/nf-core/bedgraph_bedclip_bedgraphtobigwig/main'
+include { BEDTOOLS_GENOMECOV } from './modules_simple/bedtools_genomecov.nf'
+include { BEDGRAPHTOBIGWIG as BEDGRAPH_TO_BIGWIG_FORWARD } from './modules_simple/bedgraphtobigwig.nf'
+include { BEDGRAPHTOBIGWIG as BEDGRAPH_TO_BIGWIG_REVERSE } from './modules_simple/bedgraphtobigwig.nf'
+include { BEDCLIP as BEDCLIP_FORWARD } from './modules_simple/bedclip.nf'
+include { BEDCLIP as BEDCLIP_REVERSE } from './modules_simple/bedclip.nf'
 
 include { MULTIQC } from './modules_simple/multiqc.nf'
 
@@ -43,8 +45,6 @@ FASTQC( read_pairs_ch )
 
 TRIMGALORE( read_pairs_ch )
 
-
-
 SALMON_GENOMEGENERATE ( params.genome, params.transcripts_fasta )
 SALMON_QUANT(TRIMGALORE.out.reads, SALMON_GENOMEGENERATE.out.index)
 
@@ -57,11 +57,17 @@ SAMTOOLS( STAR_ALIGN.out.sam )
 //
 //// STEP 5: Create bigWig coverage files 
 //
+
 CUSTOM_GETCHROMSIZES(params.genome)
+
 BEDTOOLS_GENOMECOV(SAMTOOLS.out.bam)
-BEDCLIP(BEDTOOLS_GENOMECOV.out.bedgraph_forward, CUSTOM_GETCHROMSIZES.out.sizes)
-BEDGRAPHTOBIGWIG(BEDTOOLS_GENOMECOV.out.bedgraph_forward, CUSTOM_GETCHROMSIZES.out.sizes)
-//TODO add reverse
+
+BEDCLIP_FORWARD(BEDTOOLS_GENOMECOV.out.bedgraph_forward, CUSTOM_GETCHROMSIZES.out.sizes)
+BEDGRAPH_TO_BIGWIG_FORWARD(BEDCLIP_FORWARD.out.bedgraph, CUSTOM_GETCHROMSIZES.out.sizes)
+
+BEDCLIP_REVERSE(BEDTOOLS_GENOMECOV.out.bedgraph_reverse, CUSTOM_GETCHROMSIZES.out.sizes)
+BEDGRAPH_TO_BIGWIG_REVERSE(BEDCLIP_REVERSE.out.bedgraph, CUSTOM_GETCHROMSIZES.out.sizes)
+
 //
 //9. Summarize QC (MultiQC)
 //
