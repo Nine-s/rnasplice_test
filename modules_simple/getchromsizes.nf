@@ -1,15 +1,15 @@
 process CUSTOM_GETCHROMSIZES {
     label 'ALL'
 
-    container "biocontainers/samtools:1.16.1--h6899075_1"
+    container "quay.io/biocontainers/samtools:1.16.1--h6899075_1"
 
     input:
-    tuple val(meta), path(fasta)
+    tuple val("genome"), path(fasta)
 
     output:
-    tuple val(meta), path ("*.sizes"), emit: sizes
-    tuple val(meta), path ("*.fai")  , emit: fai
-    tuple val(meta), path ("*.gzi")  , emit: gzi, optional: true
+    tuple val("genome"), path ("*.sizes"), emit: sizes
+    tuple val("genome"), path ("*.fai")  , emit: fai
+    tuple val("genome"), path ("*.gzi")  , emit: gzi, optional: true
 
 
     script:
