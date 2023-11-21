@@ -1,7 +1,7 @@
 process DEXSEQ_COUNT {
     label 'ALL'
 
-    container "quay.io/biocontainers/htseq:v0.11.2-1-deb-py2_cv1"
+    container "biocontainers/htseq:v0.11.2-1-deb-py2_cv1"
 
     input:
     tuple val(name), path(bam), val(condition)
