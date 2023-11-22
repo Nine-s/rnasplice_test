@@ -1,5 +1,5 @@
 sample,fastq_1,fastq_2,condition
-CONTROL_REP1,/workspace/ninon/sra/ERR11680477_1.fastq.gz,/workspace/ninon/sra/ERR11680477_2.fastq.gz,CONTROL
-CONTROL_REP2,/workspace/ninon/sra/ERR11680476_1.fastq.gz,/workspace/ninon/sra/ERR11680476_2.fastq.gz,CONTROL
-TREATMENT_REP1,/workspace/ninon/sra/ERR11680475_1.fastq.gz,/workspace/ninon/sra/ERR11680475_2.fastq.gz,TREATMENT
-TREATMENT_REP2,/workspace/ninon/sra/ERR11680474_1.fastq.gz,/workspace/ninon/sra/ERR11680474_2.fastq.gz,TREATMENT
+CONTROL_REP1,/workspace/ninon/sra/ERR11680470_1.fastq.gz,/workspace/ninon/sra/ERR11680470_2.fastq.gz,CONTROL
+CONTROL_REP2,/workspace/ninon/sra/ERR11680469_1.fastq.gz,/workspace/ninon/sra/ERR11680469_2.fastq.gz,CONTROL
+TREATMENT_REP1,/workspace/ninon/sra/ERR11680468_1.fastq.gz,/workspace/ninon/sra/ERR11680468_2.fastq.gz,TREATMENT
+TREATMENT_REP2,/workspace/ninon/sra/ERR11680467_1.fastq.gz,/workspace/ninon/sra/ERR11680467_2.fastq.gz,TREATMENT
