@@ -1,5 +1,4 @@
-//include { PREPARE_GENOME                                       } from '../subworkflows/local/prepare_genome'
-include { CAT_FASTQ } from './modules_simple/cat.nf'
+//include { GFFREAD_TX2GENE.out.tx2gene                               } from '../subworkflows/local/GFFREAD_TX2GENE.out.tx2genee { CAT_FASTQ } from './modules_simple/cat.nf'
 include { FASTQC } from './modules_simple/fastqc.nf'
 include { TRIMGALORE } from './modules_simple/trimgalore.nf'
 include { CUSTOM_GETCHROMSIZES              } from './modules_simple/getchromsizes.nf'
@@ -27,9 +26,22 @@ include { DRIMSEQ_FILTER  } from './modules_simple/drimseq_filter.nf'
 include { DEXSEQ_DTU      } from './modules_simple/dexseq_dtu.nf'
 include { DEXSEQ_COUNT } from './modules_simple/dexseq_count.nf'
 include { DEXSEQ_EXON } from './modules_simple/dexseq_exon.nf'
-//include { TX2GENE_TXIMPORT as TX2GENE_TXIMPORT_STAR_SALMON     } from 
-//include { DIFFSPLICE } from './modules_simple/modules_simple/suppa_splicing_analysis.nf'
-//'../subworkflows/local/tx2gene_tximport'
+
+include { CREATE_BAMLIST         } from './modules_simple/create_bamlist.nf'
+include { RMATS_PREP             } from './modules_simple/rmats_prep.nf'
+include { RMATS_POST             } from './modules_simple/rmats_post.nf'
+
+// include { SPLIT_FILES as SPLIT_FILES_IOE } from './modules_simple/suppa_split_files.nf' 
+// include { SPLIT_FILES as SPLIT_FILES_TPM } from '../../modules/local/suppa_split_files.nf'
+// include { SPLIT_FILES as SPLIT_FILES_IOI } from '../../modules/local/suppa_split_files.nf'
+// include { PSIPEREVENT   } from '../../modules/local/suppa_psiperevent.nf'
+// include { PSIPERISOFORM } from '../../modules/local/suppa_psiperisoform.nf'
+// include { DIFFSPLICE as DIFFSPLICE_IOE } from '../../modules/local/suppa_diffsplice.nf'
+// include { DIFFSPLICE as DIFFSPLICE_IOI } from '../../modules/local/suppa_diffsplice.nf'
+// include { GENERATE_EVENTS as GENERATE_EVENTS_IOE } from '../../modules/local/suppa_generateevents.nf'
+// include { GENERATE_EVENTS as GENERATE_EVENTS_IOI } from '../../modules/local/suppa_generateevents.nf'
+// include { CLUSTERGROUPS as CLUSTERGROUPS_IOE } from '../../modules/local/suppa_clustergroups.nf'
+// include { CLUSTEREVENTS as CLUSTEREVENTS_IOE } from '../../modules/local/suppa_clusterevents.nf'
 
 workflow{
 
@@ -111,63 +123,104 @@ DRIMSEQ_FILTER( TXIMPORT.out.txi_dtu, TXIMPORT.out.tximport_tx2gene, params.csv_
 
 DEXSEQ_DTU(DRIMSEQ_FILTER.out.drimseq_samples_tsv, DRIMSEQ_FILTER.out.drimseq_counts_tsv, params.csv_contrastsheet, params.n_dexseq_plot)
 
-
-
-
 //
-// 12. Event-based splicing analysis:
+// 13. Event-based splicing analysis:
 //
 
-// RMATS (
-//                 ch_contrastsheet,
-//                 ch_genome_bam_conditions,
-//                 PREPARE_GENOME.out.gtf,
-//                 is_single_condition,
-//                 params.rmats_read_len,
-//                 params.rmats_splice_diff_cutoff,
-//                 params.rmats_novel_splice_site,
-//                 params.rmats_min_intron_len,
-//                 params.rmats_max_exon_len,
-//                 params.rmats_paired_stats
-//             )
+ch_genome_bam_conditions = SAMTOOLS.out.bam.map { meta, bam -> [meta.condition, meta, bam] }.groupTuple(by:0)
 
-//             ch_versions = ch_versions.mix(RMATS.out.versions)
 
-//  ch_suppa_tpm = params.suppa_tpm ? PREPARE_GENOME.out.suppa_tpm : TX2GENE_TXIMPORT_STAR_SALMON.out.suppa_tpm
 
-//             // Run SUPPA
-//             SUPPA_STAR_SALMON (
-//                 PREPARE_GENOME.out.gtf,
-//                 ch_suppa_tpm,
-//                 ch_samplesheet,
-//                 ch_contrastsheet,
-//                 params.suppa_per_local_event,
-//                 params.generateevents_boundary,
-//                 params.generateevents_threshold,
-//                 params.generateevents_exon_length,
-//                 params.generateevents_event_type,
-//                 params.generateevents_pool_genes,
-//                 params.psiperevent_total_filter,
-//                 params.diffsplice_local_event,
-//                 params.diffsplice_method,
-//                 params.diffsplice_area,
-//                 params.diffsplice_lower_bound,
-//                 params.diffsplice_alpha,
-//                 params.diffsplice_tpm_threshold,
-//                 params.diffsplice_nan_threshold,
-//                 params.diffsplice_gene_correction,
-//                 params.diffsplice_paired,
-//                 params.diffsplice_median,
-//                 params.clusterevents_local_event,
-//                 params.clusterevents_dpsithreshold,
-//                 params.clusterevents_eps,
-//                 params.clusterevents_metric,
-//                 params.clusterevents_min_pts,
-//                 params.clusterevents_method,
-//                 params.clusterevents_sigthreshold ?: false,
-//                 params.clusterevents_separation ?: false,
-//                 params.suppa_per_isoform
-//             )
+    ch_contrasts = 
+    Channel.fromPath(params.csv_contrastsheet).splitCsv(header:true)
+
+    ch_contrasts = ch_contrasts
+        .map { it -> [it['treatment'], it] }
+        .combine ( ch_genome_bam_conditions, by: 0 )
+        .map { it -> it[1] + ['meta1': it[2], 'bam1': it[3]] }
+
+    ch_contrasts = ch_contrasts
+        .map { it -> [it['control'], it] }
+        .combine ( ch_genome_bam_conditions, by: 0 )
+        .map { it -> it[1] + ['meta2': it[2], 'bam2': it[3]] }
+
+
+        //
+        // Create input channel
+        //
+
+        ch_bam = ch_contrasts.map { [ it.contrast, it.treatment, it.control, it.bam1, it.bam2 ] }
+
+        //
+        // Create input bam list file
+        //
+
+        CREATE_BAMLIST (
+            ch_bam
+        )
+
+        ch_bamlist = CREATE_BAMLIST.out.bamlist
+
+        //
+        // Join bamlist with contrasts
+        //
+
+        ch_contrasts = ch_contrasts
+            .map { it -> [it['contrast'], it] }
+            .combine ( ch_bamlist, by: 0 )
+            .map { it -> it[1] + ['bam1_text': it[2], 'bam2_text': it[3]] }
+
+        //
+        // Create input channels
+        //
+
+        ch_contrasts_bamlist = ch_contrasts.map { [ it.contrast, it.treatment, it.control, it.meta1, it.meta2, it.bam1, it.bam2, it.bam1_text, it.bam2_text ] }
+
+        //
+        // Run rMATS prep step
+        //
+
+        RMATS_PREP (
+            GFFREAD_TX2GENE.out.tx2gene,
+            ch_contrasts_bamlist,
+            params.rmats_read_len,
+            params.rmats_splice_diff_cutoff,
+            params.rmats_novel_splice_site,
+            params.rmats_min_intron_len,
+            params.rmats_max_exon_len
+        )
+
+        ch_rmats_temp = RMATS_PREP.out.rmats_temp
+
+        //
+        // Join rmats temp with contrasts
+        //
+
+        ch_contrasts = ch_contrasts
+            .map { it -> [it['contrast'], it] }
+            .combine ( ch_rmats_temp, by: 0 )
+            .map { it -> it[1] + ['rmats_temp': it[2]] }
+
+        //
+        // Create input channels
+        //
+
+        ch_contrasts_bamlist = ch_contrasts.map { [ it.contrast, it.treatment, it.control, it.meta1, it.meta2, it.bam1, it.bam2, it.bam1_text, it.bam2_text, it.rmats_temp ] }
+
+        //
+        // Run rMATs post step
+        //
+
+        RMATS_POST (
+            GFFREAD_TX2GENE.out.tx2gene,
+            ch_contrasts_bamlist,
+            params.rmats_read_len,
+            params.rmats_splice_diff_cutoff,
+            params.rmats_novel_splice_site,
+            params.rmats_min_intron_len,
+            params.rmats_max_exon_len,
+            params.rmats_paired_stats
+        )
 
 }
 
