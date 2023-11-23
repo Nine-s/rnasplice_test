@@ -16,7 +16,6 @@ process RMATS_PREP {
     output:
     tuple val(contrast), path("$cond1-$cond2/rmats_temp/*") , emit: rmats_temp
     path "$cond1-$cond2/rmats_prep.log"                     , emit: log
-    path "versions.yml"                                     , emit: versions
 
     script:
     def prefix = task.ext.prefix ?: "$cond1-$cond2"

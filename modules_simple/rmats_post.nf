@@ -17,7 +17,6 @@ process RMATS_POST {
     output:
     path "$cond1-$cond2/rmats_post/*"        , emit: rmats_post
     path "$cond1-$cond2/rmats_post.log"      , emit: log
-    path "versions.yml"                      , emit: versions
 
     when:
     task.ext.when == null || task.ext.when

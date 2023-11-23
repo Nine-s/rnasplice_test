@@ -8,7 +8,6 @@ process CREATE_BAMLIST {
 
     output:
     tuple val(contrast), path("${cond1}_bamlist.txt"), path("${cond2}_bamlist.txt"), emit: bamlist
-    path "versions.yml",   emit: versions
 
     script:
     """
