@@ -130,97 +130,99 @@ DEXSEQ_DTU(DRIMSEQ_FILTER.out.drimseq_samples_tsv, DRIMSEQ_FILTER.out.drimseq_co
 // ch_genome_bam_conditions = SAMTOOLS.out.bam.map { meta, bam -> [meta.condition, meta, bam] }.groupTuple(by:0)
 
 
-
-//     ch_contrasts = 
-//     Channel.fromPath(params.csv_contrastsheet).splitCsv(header:true)
-
-//     ch_contrasts = ch_contrasts
-//         .map { it -> [it['treatment'], it] }
-//         .combine ( ch_genome_bam_conditions, by: 0 )
-//         .map { it -> it[1] + ['meta1': it[2], 'bam1': it[3]] }
-
-//     ch_contrasts = ch_contrasts
-//         .map { it -> [it['control'], it] }
-//         .combine ( ch_genome_bam_conditions, by: 0 )
-//         .map { it -> it[1] + ['meta2': it[2], 'bam2': it[3]] }
+ch_genome_bam_conditions = SAMTOOLS.out.bam.map { name, bam, condition -> [meta.condition, meta, bam] }.groupTuple(by:0)
 
 
-//         //
-//         // Create input channel
-//         //
+    ch_contrasts = 
+    Channel.fromPath(params.csv_contrastsheet).splitCsv(header:true)
 
-//         ch_bam = ch_contrasts.map { [ it.contrast, it.treatment, it.control, it.bam1, it.bam2 ] }
+    ch_contrasts = ch_contrasts
+        .map { it -> [it['treatment'], it] }
+        .combine ( ch_genome_bam_conditions, by: 0 )
+        .map { it -> it[1] + ['meta1': it[2], 'bam1': it[3]] }
 
-//         //
-//         // Create input bam list file
-//         //
+    ch_contrasts = ch_contrasts
+        .map { it -> [it['control'], it] }
+        .combine ( ch_genome_bam_conditions, by: 0 )
+        .map { it -> it[1] + ['meta2': it[2], 'bam2': it[3]] }
 
-//         CREATE_BAMLIST (
-//             ch_bam
-//         )
 
-//         ch_bamlist = CREATE_BAMLIST.out.bamlist
+        //
+        // Create input channel
+        //
 
-//         //
-//         // Join bamlist with contrasts
-//         //
+        ch_bam = ch_contrasts.map { [ it.contrast, it.treatment, it.control, it.bam1, it.bam2 ] }
 
-//         ch_contrasts = ch_contrasts
-//             .map { it -> [it['contrast'], it] }
-//             .combine ( ch_bamlist, by: 0 )
-//             .map { it -> it[1] + ['bam1_text': it[2], 'bam2_text': it[3]] }
+        //
+        // Create input bam list file
+        //
 
-//         //
-//         // Create input channels
-//         //
+        CREATE_BAMLIST (
+            ch_bam
+        )
 
-//         ch_contrasts_bamlist = ch_contrasts.map { [ it.contrast, it.treatment, it.control, it.meta1, it.meta2, it.bam1, it.bam2, it.bam1_text, it.bam2_text ] }
+        ch_bamlist = CREATE_BAMLIST.out.bamlist
 
-//         //
-//         // Run rMATS prep step
-//         //
+        //
+        // Join bamlist with contrasts
+        //
 
-//         RMATS_PREP (
-//             GFFREAD_TX2GENE.out.tx2gene,
-//             ch_contrasts_bamlist,
-//             params.rmats_read_len,
-//             params.rmats_splice_diff_cutoff,
-//             params.rmats_novel_splice_site,
-//             params.rmats_min_intron_len,
-//             params.rmats_max_exon_len
-//         )
+        ch_contrasts = ch_contrasts
+            .map { it -> [it['contrast'], it] }
+            .combine ( ch_bamlist, by: 0 )
+            .map { it -> it[1] + ['bam1_text': it[2], 'bam2_text': it[3]] }
 
-//         ch_rmats_temp = RMATS_PREP.out.rmats_temp
+        //
+        // Create input channels
+        //
 
-//         //
-//         // Join rmats temp with contrasts
-//         //
+        ch_contrasts_bamlist = ch_contrasts.map { [ it.contrast, it.treatment, it.control, it.meta1, it.meta2, it.bam1, it.bam2, it.bam1_text, it.bam2_text ] }
 
-//         ch_contrasts = ch_contrasts
-//             .map { it -> [it['contrast'], it] }
-//             .combine ( ch_rmats_temp, by: 0 )
-//             .map { it -> it[1] + ['rmats_temp': it[2]] }
+        //
+        // Run rMATS prep step
+        //
 
-//         //
-//         // Create input channels
-//         //
+        RMATS_PREP (
+            GFFREAD_TX2GENE.out.tx2gene,
+            ch_contrasts_bamlist,
+            params.rmats_read_len,
+            params.rmats_splice_diff_cutoff,
+            params.rmats_novel_splice_site,
+            params.rmats_min_intron_len,
+            params.rmats_max_exon_len
+        )
 
-//         ch_contrasts_bamlist = ch_contrasts.map { [ it.contrast, it.treatment, it.control, it.meta1, it.meta2, it.bam1, it.bam2, it.bam1_text, it.bam2_text, it.rmats_temp ] }
+        ch_rmats_temp = RMATS_PREP.out.rmats_temp
 
-//         //
-//         // Run rMATs post step
-//         //
+        //
+        // Join rmats temp with contrasts
+        //
 
-//         RMATS_POST (
-//             GFFREAD_TX2GENE.out.tx2gene,
-//             ch_contrasts_bamlist,
-//             params.rmats_read_len,
-//             params.rmats_splice_diff_cutoff,
-//             params.rmats_novel_splice_site,
-//             params.rmats_min_intron_len,
-//             params.rmats_max_exon_len,
-//             params.rmats_paired_stats
-//         )
+        ch_contrasts = ch_contrasts
+            .map { it -> [it['contrast'], it] }
+            .combine ( ch_rmats_temp, by: 0 )
+            .map { it -> it[1] + ['rmats_temp': it[2]] }
+
+        //
+        // Create input channels
+        //
+
+        ch_contrasts_bamlist = ch_contrasts.map { [ it.contrast, it.treatment, it.control, it.meta1, it.meta2, it.bam1, it.bam2, it.bam1_text, it.bam2_text, it.rmats_temp ] }
+
+        //
+        // Run rMATs post step
+        //
+
+        RMATS_POST (
+            GFFREAD_TX2GENE.out.tx2gene,
+            ch_contrasts_bamlist,
+            params.rmats_read_len,
+            params.rmats_splice_diff_cutoff,
+            params.rmats_novel_splice_site,
+            params.rmats_min_intron_len,
+            params.rmats_max_exon_len,
+            params.rmats_paired_stats
+        )
 
 }
 
