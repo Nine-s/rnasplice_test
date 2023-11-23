@@ -130,7 +130,7 @@ DEXSEQ_DTU(DRIMSEQ_FILTER.out.drimseq_samples_tsv, DRIMSEQ_FILTER.out.drimseq_co
 // ch_genome_bam_conditions = SAMTOOLS.out.bam.map { meta, bam -> [meta.condition, meta, bam] }.groupTuple(by:0)
 
 
-ch_genome_bam_conditions = SAMTOOLS.out.bam.map { name, bam, condition -> [meta.condition, meta, bam] }.groupTuple(by:0)
+ch_genome_bam_conditions = SAMTOOLS.out.bam.map { name, bam, condition -> [condition, name, bam] }.groupTuple(by:0)
 
 
     ch_contrasts = 
