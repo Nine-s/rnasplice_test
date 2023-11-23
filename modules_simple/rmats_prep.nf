@@ -30,6 +30,8 @@ process RMATS_PREP {
         strandedness  = 'fr-firststrand'
     }
 
+    def read_type = 'paired'
+
     // Whether user wants to run with novel splice sites flag
     def novel_splice_sites = rmats_novel_splice_site ? '--novelSS' : ''
 
