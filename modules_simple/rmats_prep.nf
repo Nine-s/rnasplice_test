@@ -1,6 +1,4 @@
 process RMATS_PREP {
-    tag "$cond1-$cond2"
-    label 'process_high'
 
     //container 'quay.io/biocontainers/mulled-v2-8ea76ff0a6a4c7e5c818fd4281abf918f92eeeae:121e48ab4817ec619c157a346458efca1ccf3c0a-0'
     //container "zavolab/rmats:4.0.2" 
@@ -21,7 +19,7 @@ process RMATS_PREP {
     path "$cond1-$cond2/rmats_prep.log"                     , emit: log
 
     script:
-    def prefix = task.ext.prefix ?: "$cond1-$cond2"
+    def prefix = "$cond1-$cond2"
 
     // Default strandedness to fr-unstranded - also if user supplies "unstranded"
     def strandedness = 'fr-unstranded'
@@ -36,15 +34,16 @@ process RMATS_PREP {
     def read_type = 'paired'
 
     // Whether user wants to run with novel splice sites flag
-    def novel_splice_sites = rmats_novel_splice_site ? '--novelSS' : ''
+    //def novel_splice_sites = rmats_novel_splice_site ? '--novelSS' : ''
+    def novel_splice_sites = '--novelSS' 
 
     // Additional args for when running with --novelSS flag
     // User defined else defauls to 50, 500
     def min_intron_len = ''
     def max_exon_len   = ''
     if (rmats_novel_splice_site) {
-        min_intron_len = rmats_min_intron_len ? "--mil ${rmats_min_intron_len}" : '--mil 50'
-        max_exon_len   = rmats_max_exon_len ? "--mel ${rmats_max_exon_len}" : '--mel 500'
+        min_intron_len =  "--mil ${rmats_min_intron_len}"
+        max_exon_len   =  "--mel ${rmats_max_exon_len}"
     }
 
     """
@@ -62,7 +61,6 @@ process RMATS_PREP {
         --libType $strandedness \\
         --readLength $rmats_read_len \\
         --variable-read-length \\
-        --nthread 1 \\
         --cstat $rmats_splice_diff_cutoff \\
         --task prep \\
         $novel_splice_sites \\
@@ -74,4 +72,5 @@ process RMATS_PREP {
     """
 
 }
+        //--nthread 1 \\
 //        --tstat 1 \\
