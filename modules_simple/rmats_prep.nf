@@ -59,8 +59,8 @@ process RMATS_PREP {
         --libType $strandedness \\
         --readLength $rmats_read_len \\
         --variable-read-length \\
-        --nthread $task.cpus \\
-        --tstat $task.cpus \\
+        --nthread ${params.threads} \\
+        --tstat ${params.threads} \\
         --cstat $rmats_splice_diff_cutoff \\
         --task prep \\
         $novel_splice_sites \\
