@@ -52,7 +52,7 @@ process RMATS_PREP {
 
     mkdir -p $prefix/rmats_prep
 
-    python rmats.py \\
+    python /rmats/rmats.py \\
         --gtf $gtf \\
         --b1 $bam1_text \\
         --b2 $bam2_text \\
