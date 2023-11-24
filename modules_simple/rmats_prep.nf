@@ -60,7 +60,6 @@ process RMATS_PREP {
         --readLength $rmats_read_len \\
         --variable-read-length \\
         --nthread 1 \\
-        --tstat 1 \\
         --cstat $rmats_splice_diff_cutoff \\
         --task prep \\
         $novel_splice_sites \\
@@ -72,3 +71,4 @@ process RMATS_PREP {
     """
 
 }
+//        --tstat 1 \\
