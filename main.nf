@@ -183,7 +183,7 @@ ch_genome_bam_conditions = SAMTOOLS.out.bam.map { name, bam, condition -> [condi
         //
 
         RMATS_PREP (
-            GFFREAD_TX2GENE.out.tx2gene,
+            params.annotation_gtf,
             ch_contrasts_bamlist,
             params.rmats_read_len,
             params.rmats_splice_diff_cutoff,
