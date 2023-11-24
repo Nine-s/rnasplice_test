@@ -62,7 +62,7 @@ process RMATS_PREP {
         --readLength $rmats_read_len \\
         --variable-read-length \\
         --cstat $rmats_splice_diff_cutoff \\
-        --nthread 1 \\
+        --nthread ${params.threads} \\
         --task prep \\
         $min_intron_len \\
         $max_exon_len \\

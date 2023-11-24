@@ -18,19 +18,15 @@ process RMATS_POST {
     path "$cond1-$cond2/rmats_post/*"        , emit: rmats_post
     path "$cond1-$cond2/rmats_post.log"      , emit: log
 
-    when:
-    task.ext.when == null || task.ext.when
-
     script:
 
     // Only need to take meta1 as samples have same strand and read type info
     // - see rnasplice.nf input check for rmats
     def meta = meta1[0]
-    def args = task.ext.args ?: ''
-    prefix   = task.ext.prefix ?: "$cond1-$cond2"
+    prefix   = "$cond1-$cond2"
 
     // Take single/paired end information from meta
-    def read_type = meta.single_end ? 'single' : 'paired'
+    def read_type = 'paired'
 
     // Default strandedness to fr-unstranded - also if user supplies "unstranded"
     def strandedness = 'fr-unstranded'
@@ -47,15 +43,15 @@ process RMATS_POST {
     def paired_stats = '--paired-stats' 
 
     // Whether user wants to run with novel splice sites flag
-    def novel_splice_sites = rmats_novel_splice_site ? '--novelSS' : ''
+    def novel_splice_sites = '--novelSS'
 
     // Additional args for when running with --novelSS flag
     // User defined else defauls to 50, 500
     def min_intron_len = ''
     def max_exon_len   = ''
     if (rmats_novel_splice_site) {
-        min_intron_len = rmats_min_intron_len ? "--mil ${rmats_min_intron_len}" : '--mil 50'
-        max_exon_len   = rmats_max_exon_len ? "--mel ${rmats_max_exon_len}" : '--mel 500'
+        min_intron_len = "--mil ${rmats_min_intron_len}" 
+        max_exon_len   = "--mel ${rmats_max_exon_len}"
     }
 
     """
