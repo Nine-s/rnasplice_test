@@ -62,8 +62,8 @@ process RMATS_PREP {
         --readLength $rmats_read_len \\
         --variable-read-length \\
         --cstat $rmats_splice_diff_cutoff \\
+        --nthread 1 \\
         --task prep \\
-        $novel_splice_sites \\
         $min_intron_len \\
         $max_exon_len \\
         --allow-clipping \\
@@ -72,5 +72,5 @@ process RMATS_PREP {
     """
 
 }
-        //--nthread 1 \\
+        //$novel_splice_sites \\
 //        --tstat 1 \\
