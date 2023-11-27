@@ -132,26 +132,30 @@ DEXSEQ_DTU(DRIMSEQ_FILTER.out.drimseq_samples_tsv, DRIMSEQ_FILTER.out.drimseq_co
 
 ch_genome_bam_conditions = SAMTOOLS.out.bam.map { name, bam, condition -> [condition, name, bam] }.groupTuple(by:0)
 
+//ch_genome_bam_conditions.view()
 
-    ch_contrasts = 
-    Channel.fromPath(params.csv_contrastsheet).splitCsv(header:true)
+ch_contrasts = 
+Channel.fromPath(params.csv_contrastsheet).splitCsv(header:true)
 
-    ch_contrasts = ch_contrasts
-        .map { it -> [it['treatment'], it] }
-        .combine ( ch_genome_bam_conditions, by: 0 )
-        .map { it -> it[1] + ['meta1': it[2], 'bam1': it[3]] }
+//ch_contrasts.view()
 
-    ch_contrasts = ch_contrasts
-        .map { it -> [it['control'], it] }
-        .combine ( ch_genome_bam_conditions, by: 0 )
-        .map { it -> it[1] + ['meta2': it[2], 'bam2': it[3]] }
+ch_contrasts = ch_contrasts
+    .map { it -> [it['treatment'], it] }
+    .combine ( ch_genome_bam_conditions, by: 0 )
+    .map { it -> it[1] + ['meta1': it[2], 'bam1': it[3]] }
 
-
+ch_contrasts = ch_contrasts
+    .map { it -> [it['control'], it] }
+    .combine ( ch_genome_bam_conditions, by: 0 )
+    .map { it -> it[1] + ['meta2': it[2], 'bam2': it[3]] }
+//ch_contrasts.view()
         //
         // Create input channel
         //
 
         ch_bam = ch_contrasts.map { [ it.contrast, it.treatment, it.control, it.bam1, it.bam2 ] }
+
+        ch_contrasts.view()
 
         //
         // Create input bam list file
@@ -196,6 +200,7 @@ ch_genome_bam_conditions = SAMTOOLS.out.bam.map { name, bam, condition -> [condi
 
         //
         // Join rmats temp with contrasts
+        //
         //
 
         ch_contrasts = ch_contrasts
