@@ -22,10 +22,12 @@ process MULTIQC {
 
     script:
     """
-    mkdir -p multiqc_report
+    multiqc .
     """
 }
-    //multiqc -o multiqc_report .
+    // mkdir -p multiqc_report
+    // multiqc -o multiqc_report .
+    //
         // echo ${salmon}
         // echo ${trim_galore}
         // echo ${star}
