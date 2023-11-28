@@ -26,7 +26,7 @@ process MULTIQC {
     echo ${fastqc}
     # cp every files in the folders to current location
     mkdir -p multiqc_report
-    multiqc -o multiqc_report ${params.outdir}
+    multiqc -o multiqc_report .
     """
 }
         // echo ${salmon}
