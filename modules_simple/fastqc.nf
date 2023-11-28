@@ -10,7 +10,7 @@ process FASTQC {
     tuple val(sample_id), path(reads), val(condition)
 
     output:
-    path("*_fastqc.zip", emit: zip)
+    path("*_fastqc.zip"), emit: zip
 
 
     script:

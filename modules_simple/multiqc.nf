@@ -6,6 +6,8 @@ process MULTIQC {
     input:
     path(salmon)
     path(trim_galore)
+    path(star)
+    path(fastqc)
 
     output:
     path "*multiqc_report.html", emit: report
@@ -18,6 +20,11 @@ process MULTIQC {
 
         # Create the output directory
         mkdir -p multiqc_report
+
+        echo ${salmon}
+        echo ${trim_galore}
+        echo ${star}
+        echo ${fastqc}
 
         # Run MultiQC to generate the report
         multiqc -o multiqc_report ${params.outdir}

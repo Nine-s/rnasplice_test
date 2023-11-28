@@ -84,7 +84,7 @@ BEDGRAPH_TO_BIGWIG_REVERSE(BEDCLIP_REVERSE.out.bedgraph, CUSTOM_GETCHROMSIZES.ou
 //9. Summarize QC (MultiQC)
 //
 
-//MULTIQC()
+MULTIQC(SALMON_QUANT.out.transcripts.collect(), TRIMGALORE.out.reads.collect(), STAR_ALIGN.out.collect(), FASTQC.out.zip)
 
 //
 // 11. Differential exon usage with DEXSeq or edgeR
@@ -115,119 +115,13 @@ DEXSEQ_EXON (
 
 GFFREAD_TX2GENE ( params.annotation_gtf )
 
-salmon_results = MERGE_RESULTS_SALMON(SALMON_QUANT.out.transcripts.collect())
+MERGE_RESULTS_SALMON(SALMON_QUANT.out.transcripts.collect())
 
-TXIMPORT ( salmon_results, GFFREAD_TX2GENE.out.tx2gene )
+TXIMPORT ( MERGE_RESULTS_SALMON.out.merged, GFFREAD_TX2GENE.out.tx2gene )
 
 DRIMSEQ_FILTER( TXIMPORT.out.txi_dtu, TXIMPORT.out.tximport_tx2gene, params.csv_input, params.min_samps_gene_expr, params.min_samps_feature_expr, params.min_samps_feature_prop, params.min_feature_expr, params.min_feature_prop, params.min_gene_expr )
 
 DEXSEQ_DTU(DRIMSEQ_FILTER.out.drimseq_samples_tsv, DRIMSEQ_FILTER.out.drimseq_counts_tsv, params.csv_contrastsheet, params.n_dexseq_plot)
-
-//
-// 13. Event-based splicing analysis:
-//
-
-// ch_genome_bam_conditions = SAMTOOLS.out.bam.map { meta, bam -> [meta.condition, meta, bam] }.groupTuple(by:0)
-
-
-ch_genome_bam_conditions = SAMTOOLS.out.bam.map { name, bam, condition -> [condition, name, bam] }.groupTuple(by:0)
-
-//ch_genome_bam_conditions.view()
-
-ch_contrasts = 
-Channel.fromPath(params.csv_contrastsheet).splitCsv(header:true)
-
-//ch_contrasts.view()
-
-ch_contrasts = ch_contrasts
-    .map { it -> [it['treatment'], it] }
-    .combine ( ch_genome_bam_conditions, by: 0 )
-    .map { it -> it[1] + ['meta1': it[2], 'bam1': it[3]] }
-
-ch_contrasts = ch_contrasts
-    .map { it -> [it['control'], it] }
-    .combine ( ch_genome_bam_conditions, by: 0 )
-    .map { it -> it[1] + ['meta2': it[2], 'bam2': it[3]] }
-//ch_contrasts.view()
-        //
-        // Create input channel
-        //
-
-        ch_bam = ch_contrasts.map { [ it.contrast, it.treatment, it.control, it.bam1, it.bam2 ] }
-
-        ch_contrasts.view()
-
-        //
-        // Create input bam list file
-        //
-
-        CREATE_BAMLIST (
-            ch_bam
-        )
-
-        ch_bamlist = CREATE_BAMLIST.out.bamlist
-
-        //
-        // Join bamlist with contrasts
-        //
-
-        ch_contrasts = ch_contrasts
-            .map { it -> [it['contrast'], it] }
-            .combine ( ch_bamlist, by: 0 )
-            .map { it -> it[1] + ['bam1_text': it[2], 'bam2_text': it[3]] }
-
-        //
-        // Create input channels
-        //
-
-        ch_contrasts_bamlist = ch_contrasts.map { [ it.contrast, it.treatment, it.control, it.meta1, it.meta2, it.bam1, it.bam2, it.bam1_text, it.bam2_text ] }
-
-        //
-        // Run rMATS prep step
-        //
-
-        RMATS_PREP (
-            params.annotation_gtf,
-            ch_contrasts_bamlist,
-            params.rmats_read_len,
-            params.rmats_splice_diff_cutoff,
-            params.rmats_novel_splice_site,
-            params.rmats_min_intron_len,
-            params.rmats_max_exon_len
-        )
-
-        ch_rmats_temp = RMATS_PREP.out.rmats_temp
-
-        //
-        // Join rmats temp with contrasts
-        //
-        //
-
-        ch_contrasts = ch_contrasts
-            .map { it -> [it['contrast'], it] }
-            .combine ( ch_rmats_temp, by: 0 )
-            .map { it -> it[1] + ['rmats_temp': it[2]] }
-
-        //
-        // Create input channels
-        //
-
-        ch_contrasts_bamlist = ch_contrasts.map { [ it.contrast, it.treatment, it.control, it.meta1, it.meta2, it.bam1, it.bam2, it.bam1_text, it.bam2_text, it.rmats_temp ] }
-
-        //
-        // Run rMATs post step
-        //
-
-        RMATS_POST (
-            params.annotation_gtf,
-            ch_contrasts_bamlist,
-            params.rmats_read_len,
-            params.rmats_splice_diff_cutoff,
-            params.rmats_novel_splice_site,
-            params.rmats_min_intron_len,
-            params.rmats_max_exon_len,
-            params.rmats_paired_stats
-        )
 
 }
 
@@ -236,7 +130,7 @@ process MERGE_RESULTS_SALMON {
     container "zavolab/salmon:1.1.0"
 
     input:
-    path out_folders
+    path out_folders, emit:merged
     
     output:
     path("salmon")
