@@ -12,21 +12,24 @@ process MULTIQC {
     path(star_log_final)   
     path(star_log_out)   
     path(fastqc)
-    //path(outdir)
 
     output:
-    path "multiqc_report"
+    path "*multiqc_report"
+
+    script:
+    """
+    mkdir multiqc_report
+    multiqc .
+    """
+}
     // path "*multiqc_report.html", emit: report
     // path "*_data"              , emit: data
     // path "*_plots"             , optional:true, emit: plots
 
-    script:
-    """
-    multiqc .
-    """
-}
     // mkdir -p multiqc_report
     // multiqc -o multiqc_report .
+
+
     //
         // echo ${salmon}
         // echo ${trim_galore}
