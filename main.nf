@@ -130,10 +130,10 @@ process MERGE_RESULTS_SALMON {
     container "zavolab/salmon:1.1.0"
 
     input:
-    path out_folders, emit:merged
+    path out_folders
     
     output:
-    path("salmon")
+    path("salmon"), emit:merged
     
     script:
     """
