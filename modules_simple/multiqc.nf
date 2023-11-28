@@ -4,11 +4,11 @@ process MULTIQC {
     container "staphb/multiqc:1.8"
 
     input:
-    // path(salmon)
-    // path(trim_galore)
-    // path(star)
-    // path(fastqc)
-    path(outdir)
+    path(salmon)
+    path(trim_galore)
+    path(star)
+    path(fastqc)
+    //path(outdir)
 
     output:
     path "*multiqc_report.html", emit: report
@@ -17,15 +17,17 @@ process MULTIQC {
     path "versions.yml"        , emit: versions
 
     script:
-        """
+    //def parent directory for each file
 
-        # Create the output directory
-        mkdir -p multiqc_report
-
-
-        # Run MultiQC to generate the report
-        multiqc -o multiqc_report ${params.outdir}
-        """
+    """
+    echo ${salmon}
+    echo ${trim_galore}
+    echo ${star}
+    echo ${fastqc}
+    # cp every files in the folders to current location
+    mkdir -p multiqc_report
+    multiqc -o multiqc_report ${params.outdir}
+    """
 }
         // echo ${salmon}
         // echo ${trim_galore}
