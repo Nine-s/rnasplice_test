@@ -21,7 +21,7 @@ process MULTIQC {
     """
     mkdir logs
     mv ${salmon_transcripts} ${salmon_json_info} ${trim_log} ${star_log_final} ${star_log_out} ${fastqc} logs
-    multiqc -o . logs
+    multiqc logs -o .
     """
 }
     // path "*multiqc_report.html", emit: report
