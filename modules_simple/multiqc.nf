@@ -4,9 +4,15 @@ process MULTIQC {
     container "staphb/multiqc:1.8"
 
     input:
-    path(salmon)
-    path(trim_galore)
-    path(star)
+    path(salmon_transcripts)
+    path(salmon_json_info)
+    tuple val(name_trim), path("*val*.f*q*.gz"), val(condition)
+    path(trim_log)                        
+    path(trim_html)                           
+    path(trim_zip)                        
+    tuple val(sample_name), path("${sample_name}*.sam"), val(condition)
+    path(star_log_final)   
+    path(star_log_out)   
     path(fastqc)
     //path(outdir)
 
