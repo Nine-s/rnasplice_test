@@ -15,19 +15,17 @@ process MULTIQC {
     //path(outdir)
 
     output:
-    path "*multiqc_report.html", emit: report
-    path "*_data"              , emit: data
-    path "*_plots"             , optional:true, emit: plots
-    path "versions.yml"        , emit: versions
+    path "multiqc_report"
+    // path "*multiqc_report.html", emit: report
+    // path "*_data"              , emit: data
+    // path "*_plots"             , optional:true, emit: plots
 
     script:
-    //def parent directory for each file
-
     """
     mkdir -p multiqc_report
-    multiqc -o multiqc_report .
     """
 }
+    //multiqc -o multiqc_report .
         // echo ${salmon}
         // echo ${trim_galore}
         // echo ${star}
