@@ -1,5 +1,6 @@
 process CREATE_BAMLIST {
     label 'process_single'
+    publishDir params.outdir
 
     container 'quay.io/biocontainers/sed:4.7.0'
 

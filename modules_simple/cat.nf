@@ -1,5 +1,6 @@
 process CAT_FASTQ {
     label 'ALL'
+    publishDir params.outdir
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/ubuntu:20.04' :

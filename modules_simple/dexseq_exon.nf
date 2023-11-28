@@ -1,5 +1,6 @@
 process DEXSEQ_EXON {
     label 'ALL'
+    publishDir params.outdir
 
     container 'quay.io/biocontainers/bioconductor-dexseq:1.36.0--r40_0' 
 

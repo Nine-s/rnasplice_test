@@ -1,9 +1,7 @@
 process RMATS_PREP {
 
-    //container 'quay.io/biocontainers/mulled-v2-8ea76ff0a6a4c7e5c818fd4281abf918f92eeeae:121e48ab4817ec619c157a346458efca1ccf3c0a-0'
-    //container "zavolab/rmats:4.0.2" 
-    //container "zavolab/rmats2sashimiplot:2.0.3"
     container "xinglab/rmats:v4.2.0"
+    publishDir params.outdir
 
     input:
     path gtf                                     // /path/to/genome.gtf

@@ -1,5 +1,6 @@
 
 process DEXSEQ_ANNOTATION {
+    publishDir params.outdir
     tag "$gtf"
     label 'ALL'
 

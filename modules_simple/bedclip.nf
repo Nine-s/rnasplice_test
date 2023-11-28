@@ -1,6 +1,6 @@
 process BEDCLIP {
     label 'ALL'
-
+    publishDir params.outdir
     container 'quay.io/biocontainers/ucsc-bedclip:377--h0b8a92a_2'
 
     input:

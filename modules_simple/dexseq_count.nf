@@ -1,5 +1,6 @@
 process DEXSEQ_COUNT {
     label 'ALL'
+    publishDir params.outdir
 
     container "biocontainers/htseq:v0.11.2-1-deb-py2_cv1"
 

@@ -1,6 +1,6 @@
 process CUSTOM_GETCHROMSIZES {
     label 'ALL'
-
+    publishDir params.outdir
     container "quay.io/biocontainers/samtools:1.16.1--h6899075_1"
 
     input:

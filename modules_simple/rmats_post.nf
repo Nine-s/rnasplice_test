@@ -1,6 +1,7 @@
 process RMATS_POST {
     tag "$cond1-$cond2"
     label 'process_high'
+    publishDir params.outdir
 
     container 'quay.io/biocontainers/mulled-v2-8ea76ff0a6a4c7e5c818fd4281abf918f92eeeae:121e48ab4817ec619c157a346458efca1ccf3c0a-0'
 

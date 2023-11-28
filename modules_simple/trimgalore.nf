@@ -1,6 +1,7 @@
 
 process TRIMGALORE {
     label 'ALL'
+    publishDir params.outdir
 
     container "dukegcb/trim-galore:0.4.4"
 

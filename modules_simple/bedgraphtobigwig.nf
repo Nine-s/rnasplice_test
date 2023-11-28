@@ -1,5 +1,6 @@
 process BEDGRAPHTOBIGWIG {
     label 'process_single'
+    publishDir params.outdir
 
     container 'quay.io/biocontainers/ucsc-bedgraphtobigwig:377--h446ed27_1'
 

@@ -1,5 +1,6 @@
 process BEDTOOLS_GENOMECOV {
     label 'ALL'
+    publishDir params.outdir
 
     container 'quay.io/biocontainers/bedtools:2.30.0--hc088bd4_0'
 

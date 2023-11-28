@@ -1,6 +1,6 @@
 process DRIMSEQ_FILTER {
     label 'ALL'
-
+    publishDir params.outdir
     container "zavolab/r_dge_dtu:3.5.1"
 
     input:
