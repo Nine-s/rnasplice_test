@@ -1,7 +1,8 @@
 process MULTIQC {
     label 'ALL'
     publishDir params.outdir
-    container "staphb/multiqc:1.8"
+    //container "staphb/multiqc:1.8"
+    container "nanozoo/multiqc:1.12--4f89fda"
 
     input:
     path(salmon_transcripts)
@@ -14,11 +15,10 @@ process MULTIQC {
     path(fastqc)
 
     output:
-    path "*multiqc_report"
+    path "multiqc_report.html"
 
     script:
     """
-    mkdir multiqc_report
     multiqc .
     """
 }
