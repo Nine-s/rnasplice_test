@@ -24,11 +24,6 @@ process MULTIQC {
     //def parent directory for each file
 
     """
-    echo ${salmon}
-    echo ${trim_galore}
-    echo ${star}
-    echo ${fastqc}
-    # cp every files in the folders to current location
     mkdir -p multiqc_report
     multiqc -o multiqc_report .
     """
