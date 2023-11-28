@@ -19,7 +19,9 @@ process MULTIQC {
 
     script:
     """
-    multiqc .
+    mkdir logs
+    mv ${salmon_transcripts} ${salmon_json_info} ${trim_log} ${star_log_final} ${star_log_out} ${fastqc} logs
+    multiqc -o . logs
     """
 }
     // path "*multiqc_report.html", emit: report
