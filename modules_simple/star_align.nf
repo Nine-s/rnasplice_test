@@ -11,7 +11,8 @@ process STAR_ALIGN {
 
     output:
     tuple val(sample_name), path("${sample_name}*.sam"), val(condition), emit: sam 
-
+    path('*Log.final.out')   , emit: log_final
+    path('*Log.out')         , emit: log_out
     script:
     """
     if [[ (${params.strand} == "firststrand") || (${params.strand} == "secondstrand") ]]; then

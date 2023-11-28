@@ -84,7 +84,7 @@ BEDGRAPH_TO_BIGWIG_REVERSE(BEDCLIP_REVERSE.out.bedgraph, CUSTOM_GETCHROMSIZES.ou
 //9. Summarize QC (MultiQC)
 //
 
-MULTIQC(SALMON_QUANT.out.transcripts.collect(), TRIMGALORE.out.reads.collect(), STAR_ALIGN.out.collect(), FASTQC.out.zip)
+MULTIQC(SALMON_QUANT.out.collect(), TRIMGALORE.out.collect(), STAR_ALIGN.out.collect(), FASTQC.out.collect())
 //SALMON_QUANT.out.transcripts.collect(), TRIMGALORE.out.reads.collect(), STAR_ALIGN.out.collect(), FASTQC.out.zip
 
 //

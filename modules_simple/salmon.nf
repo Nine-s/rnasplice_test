@@ -10,6 +10,7 @@ process SALMON_QUANT {
     output:
     //tuple val(sample_name), path("transcripts_quant"), val(condition), emit: quantification 
     path(sample_name), emit: transcripts
+    path("*info.json"), emit: json_info, optional: true
 
     script:
     """
@@ -23,6 +24,7 @@ process SALMON_QUANT {
 		echo ${params.strand} > error_strandness.txt
 		echo "strandness cannot be determined" >> error_strandness.txt
 	fi
+    cp ${sample_name}/aux_info/meta_info.json "${sample_name}_meta_info.json"
     """
     
 }
