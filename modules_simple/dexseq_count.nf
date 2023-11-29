@@ -2,7 +2,7 @@ process DEXSEQ_COUNT {
     label 'ALL'
     publishDir params.outdir
 
-    container "biocontainers/htseq:v0.11.2-1-deb-py2_cv1"
+    container "quay.io/biocontainers/htseq:v0.11.2-1-deb-py2_cv1"
 
     input:
     tuple val(name), path(bam), val(condition)
