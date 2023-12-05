@@ -38,7 +38,7 @@ read_pairs_ch = Channel
 //CAT_FASTQ(read_pairs_ch)
 
 FASTQC( read_pairs_ch )
-genome
+//genome
 TRIMGALORE( read_pairs_ch )
 
 SALMON_GENOMEGENERATE ( params.genome, params.transcripts_fasta )
@@ -68,7 +68,7 @@ BEDGRAPH_TO_BIGWIG_REVERSE(BEDCLIP_REVERSE.out.bedgraph, CUSTOM_GETCHROMSIZES.ou
 //9. Summarize QC (MultiQC)
 //
 
-MULTIQC(SALMON_QUANT.out, TRIMGALORE.out, STAR_ALIGN.out, FASTQC.out)
+//MULTIQC(SALMON_QUANT.out, TRIMGALORE.out, STAR_ALIGN.out, FASTQC.out)
 MULTIQC(SALMON_QUANT.out.collect(), TRIMGALORE.out.collect(), STAR_ALIGN.out.collect(), FASTQC.out.collect())
 
 //SALMON_QUANT.out.transcripts.collect(), TRIMGALORE.out.reads.collect(), STAR_ALIGN.out.collect(), FASTQC.out.zip
