@@ -22,26 +22,10 @@ include { BEDCLIP as BEDCLIP_REVERSE } from './modules_simple/bedclip.nf'
 include { MULTIQC } from './modules_simple/multiqc.nf'
 
 include { DEXSEQ_ANNOTATION } from './modules_simple/dexseq_annotation.nf'
-include { DRIMSEQ_FILTER  } from './modules_simple/drimseq_filter.nf'
-include { DEXSEQ_DTU      } from './modules_simple/dexseq_dtu.nf'
 include { DEXSEQ_COUNT } from './modules_simple/dexseq_count.nf'
 include { DEXSEQ_EXON } from './modules_simple/dexseq_exon.nf'
-
-include { CREATE_BAMLIST         } from './modules_simple/create_bamlist.nf'
-include { RMATS_PREP             } from './modules_simple/rmats_prep.nf'
-include { RMATS_POST             } from './modules_simple/rmats_post.nf'
-
-// include { SPLIT_FILES as SPLIT_FILES_IOE } from './modules_simple/suppa_split_files.nf' 
-// include { SPLIT_FILES as SPLIT_FILES_TPM } from '../../modules/local/suppa_split_files.nf'
-// include { SPLIT_FILES as SPLIT_FILES_IOI } from '../../modules/local/suppa_split_files.nf'
-// include { PSIPEREVENT   } from '../../modules/local/suppa_psiperevent.nf'
-// include { PSIPERISOFORM } from '../../modules/local/suppa_psiperisoform.nf'
-// include { DIFFSPLICE as DIFFSPLICE_IOE } from '../../modules/local/suppa_diffsplice.nf'
-// include { DIFFSPLICE as DIFFSPLICE_IOI } from '../../modules/local/suppa_diffsplice.nf'
-// include { GENERATE_EVENTS as GENERATE_EVENTS_IOE } from '../../modules/local/suppa_generateevents.nf'
-// include { GENERATE_EVENTS as GENERATE_EVENTS_IOI } from '../../modules/local/suppa_generateevents.nf'
-// include { CLUSTERGROUPS as CLUSTERGROUPS_IOE } from '../../modules/local/suppa_clustergroups.nf'
-// include { CLUSTEREVENTS as CLUSTEREVENTS_IOE } from '../../modules/local/suppa_clusterevents.nf'
+include { DRIMSEQ_FILTER  } from './modules_simple/drimseq_filter.nf'
+include { DEXSEQ_DTU      } from './modules_simple/dexseq_dtu.nf'
 
 workflow{
 
@@ -54,7 +38,7 @@ read_pairs_ch = Channel
 //CAT_FASTQ(read_pairs_ch)
 
 FASTQC( read_pairs_ch )
-
+genome
 TRIMGALORE( read_pairs_ch )
 
 SALMON_GENOMEGENERATE ( params.genome, params.transcripts_fasta )
@@ -85,6 +69,8 @@ BEDGRAPH_TO_BIGWIG_REVERSE(BEDCLIP_REVERSE.out.bedgraph, CUSTOM_GETCHROMSIZES.ou
 //
 
 MULTIQC(SALMON_QUANT.out, TRIMGALORE.out, STAR_ALIGN.out, FASTQC.out)
+MULTIQC(SALMON_QUANT.out.collect(), TRIMGALORE.out.collect(), STAR_ALIGN.out.collect(), FASTQC.out.collect())
+
 //SALMON_QUANT.out.transcripts.collect(), TRIMGALORE.out.reads.collect(), STAR_ALIGN.out.collect(), FASTQC.out.zip
 
 //
