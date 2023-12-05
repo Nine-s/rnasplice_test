@@ -69,7 +69,7 @@ BEDGRAPH_TO_BIGWIG_REVERSE(BEDCLIP_REVERSE.out.bedgraph, CUSTOM_GETCHROMSIZES.ou
 //
 
 //MULTIQC(SALMON_QUANT.out, TRIMGALORE.out, STAR_ALIGN.out, FASTQC.out)
-MULTIQC(SALMON_QUANT.out.collect(), TRIMGALORE.out.collect(), STAR_ALIGN.out.collect(), FASTQC.out.collect())
+//MULTIQC(SALMON_QUANT.out.collect(), TRIMGALORE.out.collect(), STAR_ALIGN.out.collect(), FASTQC.out.collect())
 MULTIQC(SALMON_QUANT.out.json_info.collect(), TRIMGALORE.out.log.collect(), STAR_ALIGN.out.log_final.collect(), FASTQC.out.zip.collect())
 
 
